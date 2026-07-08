@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 2 · Aprender a pedir bien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#131029;
+    --panel:#1d1840;
+    --panel-alt:#241c52;
+    --panel-line: rgba(237,234,251,0.10);
+    --lime:#d4ff3d;
+    --lime-dim: rgba(212,255,61,0.14);
+    --coral:#ff6b57;
+    --coral-dim: rgba(255,107,87,0.14);
+    --sky:#59c9f1;
+    --sky-dim: rgba(89,201,241,0.14);
+    --text:#edeaf6;
+    --muted:#a49bc9;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; height:100%; background:var(--ink); color:var(--text); font-family:var(--body); overflow:hidden; }
+  body{
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(212,255,61,0.06), transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(89,201,241,0.07), transparent 45%);
+  }
+
+  .chatbar{
+    position:fixed; top:0; left:0; right:0; height:56px;
+    display:flex; align-items:center; justify-content:space-between; padding:0 22px;
+    background:rgba(19,16,41,0.85); backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--panel-line); z-index:20;
+  }
+  .chatbar-left{display:flex; align-items:center; gap:10px;}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite;}
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(212,255,61,0.55);} 70%{box-shadow:0 0 0 8px rgba(212,255,61,0);} 100%{box-shadow:0 0 0 0 rgba(212,255,61,0);} }
+  .chatbar-title{font-family:var(--display); font-weight:600; font-size:14.5px;}
+  .chatbar-sub{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:8px;}
+  .chatbar-right{font-family:var(--mono); font-size:12.5px; color:var(--muted);}
+  .chatbar-right b{color:var(--text);}
+
+  .deck{ position:relative; width:100%; height:100%; padding-top:56px; padding-bottom:74px; }
+  .slide{ position:absolute; inset:56px 0 74px 0; display:none; padding:5vh 7vw; overflow-y:auto; }
+  .slide.active{ display:flex; flex-direction:column; justify-content:center; animation: rise 0.5s ease; }
+  @keyframes rise{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  .badge{ display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; padding:5px 12px; border-radius:100px; width:fit-content; margin-bottom:22px; border:1px solid transparent; }
+  .badge.exp{ background:var(--sky-dim); color:var(--sky); border-color:rgba(89,201,241,0.3);}
+  .badge.act{ background:var(--lime-dim); color:var(--lime); border-color:rgba(212,255,61,0.3);}
+  .badge.alert{ background:var(--coral-dim); color:var(--coral); border-color:rgba(255,107,87,0.3);}
+  .badge .b-dot{width:6px; height:6px; border-radius:50%; background:currentColor;}
+
+  .bubble{ position:relative; background:var(--panel); border:1px solid var(--panel-line); border-radius:22px; padding:34px 40px; max-width:920px; }
+  .bubble::before{ content:''; position:absolute; left:34px; bottom:-9px; width:20px; height:20px; background:var(--panel); border-left:1px solid var(--panel-line); border-bottom:1px solid var(--panel-line); clip-path: polygon(0 0, 100% 100%, 0 100%); }
+
+  h1.slide-title{ font-family:var(--display); font-weight:700; font-size:clamp(26px, 3.6vw, 44px); line-height:1.1; margin:0 0 6px 0; max-width:940px; }
+  h1.slide-title .cursor{ display:inline-block; width:0.5ch; background:var(--lime); animation: blink 1s step-end infinite; margin-left:2px; }
+  @keyframes blink{ 50%{opacity:0;} }
+
+  .slide-kicker{ font-family:var(--mono); font-size:12.5px; color:var(--muted); letter-spacing:0.04em; margin-bottom:14px; }
+  p.lead{ font-size:16.5px; line-height:1.55; color:var(--text); max-width:780px; margin:14px 0 0 0;}
+  p.lead b{color:var(--lime);}
+  ul.points{ list-style:none; margin:20px 0 0 0; padding:0; max-width:840px;}
+  ul.points li{ position:relative; padding-left:26px; margin-bottom:12px; font-size:15.5px; line-height:1.5; color:var(--text);}
+  ul.points li::before{ content:'▍'; position:absolute; left:0; top:1px; color:var(--lime); font-size:14px;}
+
+  .grid{ display:grid; gap:16px; margin-top:22px; }
+  .grid.g2{ grid-template-columns:1fr 1fr; }
+  .grid.g3{ grid-template-columns:repeat(3, 1fr); }
+  .grid.g4{ grid-template-columns:repeat(4, 1fr); }
+  .grid.g5{ grid-template-columns:repeat(5, 1fr); }
+  .card{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:16px; padding:16px 18px; }
+  .card h3{ font-family:var(--display); font-size:15.5px; margin:9px 0 6px 0; }
+  .card p{ font-size:13px; color:var(--muted); line-height:1.45; margin:0;}
+  .icon{ width:26px; height:26px; color:var(--lime); }
+  .icon.sky{ color:var(--sky); }
+  .icon.coral{ color:var(--coral); }
+
+  .col-title{ font-family:var(--display); font-weight:600; font-size:15px; margin-bottom:10px; }
+  .col-title.sky{ color:var(--sky); }
+  .col-title.lime{ color:var(--lime); }
+  .col-title.coral{ color:var(--coral); }
+
+  .foot-note{ margin-top:24px; font-family:var(--mono); font-size:11.5px; color:var(--muted); border-top:1px dashed var(--panel-line); padding-top:12px; max-width:840px; }
+
+  .title-slide{ justify-content:center; align-items:flex-start; }
+  .title-slide .kicker{ font-family:var(--mono); color:var(--sky); font-size:14px; letter-spacing:0.08em; text-transform:uppercase;}
+  .title-slide h1{ font-family:var(--display); font-weight:700; font-size:clamp(36px,6.4vw,78px); line-height:1.03; margin:14px 0 10px 0; }
+  .title-slide .sub{ font-family:var(--body); font-size:18px; color:var(--muted); max-width:660px; }
+  .title-slide .startline{ margin-top:38px; font-family:var(--mono); font-size:13.5px; color:var(--lime); display:flex; align-items:center; gap:10px; }
+
+  /* comparativa vago vs mejorado */
+  .vs-wrap{ display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin-top:24px; max-width:960px;}
+  .vs-card{ border-radius:16px; padding:20px 22px; border:1px solid var(--panel-line); }
+  .vs-card.bad{ background:var(--coral-dim); border-color:rgba(255,107,87,0.3); }
+  .vs-card.good{ background:var(--lime-dim); border-color:rgba(212,255,61,0.3); }
+  .vs-tag{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; display:block; }
+  .vs-card.bad .vs-tag{ color:var(--coral); }
+  .vs-card.good .vs-tag{ color:var(--lime); }
+  .vs-text{ font-family:var(--mono); font-size:14px; line-height:1.5; color:var(--text); }
+  .vs-mid{ display:flex; align-items:center; justify-content:center; font-family:var(--mono); color:var(--muted); font-size:22px; }
+
+  /* piezas de un buen prompt */
+  .piece{ position:relative; }
+  .piece .n{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+
+  /* iteración */
+  .iter-row{ display:flex; gap:16px; margin-top:24px; flex-wrap:wrap; }
+  .iter-step{ flex:1; min-width:220px; background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:16px; padding:18px 20px; position:relative; }
+  .iter-step .num{ font-family:var(--display); font-size:26px; color:var(--sky); font-weight:700; }
+  .iter-step h4{ font-family:var(--display); font-size:14.5px; margin:8px 0 6px 0; }
+  .iter-step p{ font-size:12.5px; color:var(--muted); margin:0; line-height:1.4; }
+  .iter-arrow{ align-self:center; color:var(--muted); font-family:var(--mono); font-size:20px; }
+
+  /* roles */
+  .role-card{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:16px; padding:18px 20px; }
+  .role-card .role-tag{ font-family:var(--mono); font-size:11px; color:var(--sky); text-transform:uppercase; letter-spacing:0.05em; }
+  .role-card p{ font-size:13.5px; color:var(--text); margin:10px 0 0 0; line-height:1.45; font-style:italic; }
+
+  /* prompt library */
+  .promptcard{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:14px; padding:14px 16px; }
+  .promptcard .ptag{ font-family:var(--mono); font-size:10.5px; color:var(--sky); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; display:block;}
+  .promptcard .ptext{ font-family:var(--mono); font-size:12.5px; color:var(--text); line-height:1.45; }
+  .promptcard .ptext::before{ content:'"'; color:var(--lime); }
+  .promptcard .ptext::after{ content:'"'; color:var(--lime); }
+
+  /* plantilla */
+  .template{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:16px; padding:24px 28px; max-width:760px; font-family:var(--mono); font-size:15px; line-height:2.2; margin-top:22px; }
+  .template .fill{ color:var(--lime); border-bottom:1px dashed rgba(212,255,61,0.4); padding-bottom:1px; }
+
+  /* prompt battle */
+  .battle{ display:flex; align-items:center; justify-content:center; gap:26px; margin-top:26px; }
+  .battle .side{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:16px; padding:22px 26px; text-align:center; min-width:180px; }
+  .battle .side h4{ font-family:var(--display); font-size:17px; margin:0 0 6px 0; color:var(--lime); }
+  .battle .side p{ font-size:12px; color:var(--muted); margin:0; }
+  .battle .vs{ font-family:var(--display); font-size:24px; color:var(--coral); font-weight:700; }
+
+  .noshare{ display:grid; grid-template-columns: repeat(2,1fr); gap:12px; margin-top:22px; max-width:840px;}
+  .noshare div{ background:var(--coral-dim); border:1px solid rgba(255,107,87,0.3); border-radius:12px; padding:12px 16px; font-size:14px; color:var(--text); display:flex; align-items:center; gap:10px; }
+  .noshare div::before{ content:'✕'; color:var(--coral); font-weight:700; }
+
+  .chip{ font-family:var(--mono); font-size:12px; padding:6px 12px; border-radius:9px; background:var(--panel-alt); border:1px solid var(--panel-line); color:var(--text); }
+  .chip-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+
+  .navbar{ position:fixed; left:0; right:0; bottom:0; height:74px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; background:rgba(19,16,41,0.85); backdrop-filter:blur(6px); border-top:1px solid var(--panel-line); z-index:20; }
+  .dots{ display:flex; gap:6px; flex-wrap:wrap; max-width:60%; }
+  .dots span{ width:7px; height:7px; border-radius:50%; background:var(--panel-line); cursor:pointer; transition:background 0.2s, transform 0.2s; }
+  .dots span.on{ background:var(--lime); transform:scale(1.25); }
+  .navbtns{ display:flex; gap:10px; }
+  .navbtns button{ font-family:var(--mono); font-size:13px; color:var(--text); background:var(--panel-alt); border:1px solid var(--panel-line); padding:9px 16px; border-radius:9px; cursor:pointer; }
+  .navbtns button:hover{ border-color:var(--lime); color:var(--lime); }
+  .navbtns button:disabled{ opacity:0.3; cursor:default; }
+  .navbtns button:disabled:hover{ border-color:var(--panel-line); color:var(--text); }
+
+  @media (max-width: 900px){
+    .grid.g4, .grid.g5{ grid-template-columns:repeat(2,1fr); }
+    .grid.g3{ grid-template-columns:1fr 1fr; }
+    .grid.g2{ grid-template-columns:1fr; }
+    .vs-wrap{ grid-template-columns:1fr; }
+    .vs-mid{ transform:rotate(90deg); }
+    .noshare{ grid-template-columns:1fr; }
+    .battle{ flex-direction:column; }
+    .dots{ max-width:40%; }
+  }
+
+   .ampliable {
+    cursor: zoom-in;
+    max-width: 90%;
+    height: auto;
+    margin-top: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="chatbar">
+  <div class="chatbar-left">
+    <div class="dot"></div>
+    <span class="chatbar-title">IA · Sesión 2</span>
+    <span class="chatbar-sub">Aprender a pedir bien</span>
+  </div>
+  <div class="chatbar-right"><b id="cur">01</b>/18</div>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- 0 Portada -->
+  <section class="slide active title-slide">
+    <div class="kicker">Taller de IA generativa · Sesión 2 de 4</div>
+    <h1>Aprender<br>a pedir bien</h1>
+    <p class="sub">Cómo hablar con una IA para que te entienda mejor. La diferencia entre una respuesta cutre y una que flipas está casi siempre en cómo se lo pides.</p>
+    <div class="startline">▍ pulsa → o espacio para empezar</div>
+  </section>
+
+  <!-- 1 Recordatorio sesión 1 -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Recordando</div>
+    <div class="slide-kicker">La sesión pasada</div>
+    <h1 class="slide-title">Ya sabéis qué es y qué puede hacer</h1>
+    <p class="lead">Descubristeis qué es la IA generativa, cómo funciona por dentro (más o menos) y qué no debéis compartir nunca con ella.</p>
+    <p class="lead">Hoy toca la parte que más cambia el resultado: <b>cómo se lo pides</b>.</p>
+    <div style="max-width: 570px; margin-top:10px;">
+      <a href="./img/importancia_prompts.png" target="_blank" rel="noopener noreferrer">
+        <img src="./img/importancia_prompts.png" alt="Foto ampliable" class="ampliable">
+      </a>
+    </div>
+  </section>
+
+  <!-- 2 Activación: vago vs mejorado -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Activación</div>
+    <div class="slide-kicker">Mismo tema, dos formas de pedirlo</div>
+    <h1 class="slide-title">Mira la diferencia</h1>
+    <div class="vs-wrap">
+      <div class="vs-card bad">
+        <span class="vs-tag">Prompt vago</span>
+        <div class="vs-text">"Hazme una historia"</div>
+      </div>
+      <div class="vs-mid">→</div>
+      <div class="vs-card good">
+        <span class="vs-tag">Prompt currado</span>
+        <div class="vs-text">"Escribe una historia corta de misterio para adolescentes, con humor, ambientada en un instituto, con final sorpresa, en menos de 150 palabras"</div>
+      </div>
+    </div>
+    <div class="foot-note">Probadlo los dos en clase y comparad: mismo modelo, resultados en ligas distintas.</div>
+  </section>
+
+  <!-- 3 Idea clave -->
+  <section class="slide">
+    <div class="bubble">
+      <div class="slide-kicker">La idea de hoy en una frase</div>
+      <h1 class="slide-title">La IA no adivina<span class="cursor">&nbsp;</span></h1>
+      <p class="lead">No sabe lo que tienes en la cabeza. Solo tiene lo que le escribes. <b>Cuanto mejor explicas lo que quieres, mejor te puede ayudar.</b></p>
+      <ul class="point">
+        <li>Pedir mejor no es escribir más; es dar mejor la información.</li>
+        <li>Si tú vas a lo loco, la IA también</li>
+        <li>Saber cómo pedir a la IA hoy día es un trabajo: `Ingeniería de Prompts`</li>
+      </ul>
+    </div>
+    <div class="foot-note">
+      <p>Si tú eres más claro, la respuesta también suele ser mejor</p>
+    </div>
+  </section>
+
+  <!-- 4 Qué tiene un buen prompt -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación</div>
+    <div class="slide-kicker">Las 5 piezas</div>
+    <h1 class="slide-title">Qué tiene un buen prompt</h1>
+    <div class="grid g5">
+      <div class="card piece"><span class="n">01</span><h3>Tarea</h3><p>Qué quieres exactamente que haga.</p></div>
+      <div class="card piece"><span class="n">02</span><h3>Contexto</h3><p>Datos de la situación: para qué, sobre qué.</p></div>
+      <div class="card piece"><span class="n">03</span><h3>Rol</h3><p>Quién tiene que "ser" la IA al responder.</p></div>
+      <div class="card piece"><span class="n">04</span><h3>Formato</h3><p>Lista, tabla, párrafo corto, con emojis...</p></div>
+      <div class="card piece"><span class="n">05</span><h3>Restricciones</h3><p>Longitud, tono, qué evitar.</p></div>
+    </div>
+    <div class="foot-note">No hace falta usar las 5 siempre. Cuantas más pongas, más se ajusta la respuesta a lo que quieres.</div>
+  </section>
+
+  <!-- 5 Ejemplo guiado -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Ejemplo guiado</div>
+    <div class="slide-kicker">Las 5 piezas, en acción</div>
+    <h1 class="slide-title">De "explícame ..."</h1>
+    <div class="vs-wrap">
+      <div class="vs-card bad">
+        <span class="vs-tag">Simple</span>
+        <div class="vs-text">"Explica los peligros de compartir información por Internet"</div>
+      </div>
+      <div class="vs-mid">→</div>
+      <div class="vs-card good">
+        <span class="vs-tag">Mejorado</span>
+        <div class="vs-text">
+          "Tarea: “Haz una mini presentación sobre los peligros de compartir demasiada información personal en internet”.
+          Contexto: “Es para chicos y chicas entre 12 y 16 años, para exponerla en un taller veraniego, con ejemplos cercanos”.
+          Rol: “Actúa como un profe creativo que explica muy bien”.
+          Formato: “Título, 4 ideas, ejemplo realista y cierre final”.
+          Restricciones: “Breve, tono claro, sin tecnicismos, máximo 120 palabras”.
+        </div>
+      </div>
+    </div>
+    <div class="chip-row">
+      <span class="chip">Tarea → crea presentación</span>
+      <span class="chip">Contexto → para chavales entre 12 y 16 años</span>
+      <span class="chip">Rol → profe creativo</span>
+      <span class="chip">Formato → presentación acotada</span>
+      <span class="chip">Restricción → breve y clara</span>
+    </div>
+  </section>
+
+  <!-- 6 Retos progresivos -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Actividad · Retos</div>
+    <div class="slide-kicker">Ahora vosotros</div>
+    <h1 class="slide-title">4 retos, de más fácil a más currado</h1>
+    <div class="grid g4">
+      <div class="card"><h3>😂 Hazme un chiste</h3><p>Pero pídele que sea sobre algo muy concreto de tu día a día.</p></div>
+      <div class="card"><h3>🌱 La fotosíntesis</h3><p>Pídesela explicada como si fueras tú quien se la explica a un peque.</p></div>
+      <div class="card"><h3>🧙 Inventa un personaje</h3><p>Dale un contexto: para una historia, un juego, un cómic...</p></div>
+      <div class="card"><h3>📚 Ayúdame a estudiar</h3><p>Usa un tema real de algo que no hayas entendido durante el curso.</p></div>
+    </div>
+    <div class="foot-note">Usa los 5 elementos de un buen prompt</div>
+  </section>
+
+  <!-- 7 Iterar también es pensar -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación</div>
+    <div class="slide-kicker">No se acierta a la primera, y no pasa nada</div>
+    <h1 class="slide-title">Iterar también es pensar</h1>
+    <p class="lead">Trabajar con IA no es pedir una vez y ya. Es <b>revisar y mejorar</b>, como cuando editas un trabajo.</p>
+     <div class="iter-row">
+      <div class="iter-step"><div class="num">1</div><h4>Primer intento</h4><p>Pides algo general para ver por dónde va.</p></div>
+      <div class="iter-arrow">→</div>
+      <div class="iter-step"><div class="num">2</div><h4>Segunda versión</h4><p>Le dices qué cambiar: más corto, más serio, otro ejemplo...</p></div>
+      <div class="iter-arrow">→</div>
+      <div class="iter-step"><div class="num">3</div><h4>Tercera versión</h4><p>Afinas el detalle final hasta que es justo lo que querías.</p></div>
+      <div class="iter-arrow">→</div>
+      <div class="iter-step"><div class="num">4</div>
+        <a href="./img/iterando.png" target="_blank" rel="noopener noreferrer">
+          <img src="./img/iterando.png" alt="Foto ampliable" class="ampliable">
+        </a>
+      </div>
+    </div>
+    <div class="role-card" style="margin-top:20px">
+      <span class="role-tag"><h3>Consejo:</h3></span>
+      <p>Puedes pedir a un modelo de IA "barato" (Gemini, Deepseek) que te elabore un prompt indicando todo lo que quieres que haga para pasárselo 
+        a otra modelo de IA más potente (ChatGPT o Claude) que es quién elaborará el resultado definitivo. Así ahorras tokens de estar repreguntando al modelo más caro.
+      </p>
+    </div>
+  </section>
+
+  <!-- 8 Roles y contexto -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación</div>
+    <div class="slide-kicker">Mismo tema, distinto "quién lo cuenta"</div>
+    <h1 class="slide-title">El rol cambia toda la respuesta</h1>
+    <p class="lead">Tema: <b>el cambio climático</b>. Mira qué distinto suena según a quién le pidas que "actúe":</p>
+    <div class="grid g3">
+      <div class="role-card"><span class="role-tag">Profe de secundaria</span><p>"El planeta se está calentando un poco de más, y eso hace que se derritan cosas que antes estaban congeladas..."</p></div>
+      <div class="role-card"><span class="role-tag">Youtuber de ciencia</span><p>"Vale, esto es una locura: llevamos 150 años echando gases a la atmósfera y ahora toca pagar la factura..."</p></div>
+      <div class="role-card"><span class="role-tag">Guionista de videojuego</span><p>"El núcleo del planeta susurra una advertencia: el hielo eterno ya no es eterno..."</p></div>
+    </div>
+    <p>Es como elegir quién te lo explica: no es lo mismo que te lo cuente un profe, un youtuber o un escritor. La información puede ser parecida, pero la manera de contártela cambia mucho.</p>
+    <div class="role-card">
+      <span class="role-tag"><p>¿Cómo indicarlo?</p></span>
+      <ul class="point">
+        <li>Actúa como...</li>
+        <li>Explícame...</li>
+        <li>Para quién va dirigido...</li>
+        <li>Hazlo con este tono...</li>
+      </ul>
+      <p>Actúa como un profe de secundaria y explícame el cambio climático para alumnos de 2º de ESO, con lenguaje claro y un ejemplo cotidiano.</p>
+    </div>
+  </section>
+
+  <!-- 9 Prompt battles -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Actividad · Prompt battle</div>
+    <div class="slide-kicker">Por parejas o equipos</div>
+    <h1 class="slide-title">Prompt battles</h1>
+    <p class="lead">Mismo reto para todos. Gana el prompt que consiga el mejor resultado en un solo intento.</p>
+    <div class="battle">
+      <div class="side"><h4>Equipo A</h4><p>Escribe su prompt en 2 minutos</p></div>
+      <div class="vs">VS</div>
+      <div class="side"><h4>Equipo B</h4><p>Escribe su prompt en 2 minutos</p></div>
+    </div>
+    <div class="foot-note">Se leen los dos resultados en voz alta y la clase vota cuál cumple mejor el reto. El profe propone el reto
+       (ej: "escribir el mejor inicio de una historia de miedo ambientada en el instituto o en un campamento de verano",
+       "inventar el mejor anuncio para vender algo absurdo, como un vender paraguas en el desierto o unas chanclas con WiFi", " pedir una historia corta que parezca normal y acabe con un giro inesperado").</div>
+  </section>
+
+  <!-- 10 Aplicación divertida -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Para jugar</div>
+    <div class="slide-kicker">Prompts para pasarlo bien</div>
+    <h1 class="slide-title">Aplicación divertida</h1>
+    <div class="grid g4">
+      <div class="card"><h3>📖 Historias</h3><p>"Escribe un cuento de 100 palabras donde el villano gana, pero de forma simpática"</p></div>
+      <div class="card"><h3>😂 Chistes</h3><p>"Hazme 3 chistes malos sobre adolescentes"</p></div>
+      <div class="card"><h3>🎭 Diálogos imposibles</h3><p>"Escribe una conversación entre un pulpo y una tostadora discutiendo sobre fútbol"</p></div>
+      <div class="card"><h3>🔁 Reescritura</h3><p>"Cuenta El Quijote ambientado en el recreo de un instituto"</p></div>
+    </div>
+  </section>
+
+  <!-- 11 Errores típicos -->
+  <section class="slide">
+    <div class="badge alert"><span class="b-dot"></span>Aviso</div>
+    <div class="slide-kicker">Lo que hace que un prompt falle</div>
+    <h1 class="slide-title">Errores típicos al pedir cosas</h1>
+    <div class="grid g4">
+      <div class="card"><h3 style="color:var(--coral)">Ser demasiado vago</h3><p>"Hazme algo chulo" no dice nada. La IA no puede adivinar tu idea de "chulo".</p></div>
+      <div class="card"><h3 style="color:var(--coral)">No indicar formato</h3><p>Si no dices cómo lo quieres, puede salir un muro de texto imposible de leer.</p></div>
+      <div class="card"><h3 style="color:var(--coral)">No dar contexto</h3><p>Sin saber para qué es, la IA responde "en general" y casi nunca encaja.</p></div>
+      <div class="card"><h3 style="color:var(--coral)">No revisar el resultado</h3><p>El primer intento casi nunca es el mejor. Si no te vale, pide que lo cambie.</p></div>
+    </div>
+  </section>
+
+  <!-- 12 Prompts útiles día a día 1 -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Para llevarte</div>
+    <div class="slide-kicker">Prompts que puedes usar hoy mismo · parte 1</div>
+    <h1 class="slide-title">Para el día a día del insti</h1>
+    <div class="grid g4">
+      <div class="promptcard"><span class="ptag">Resumir</span><div class="ptext">Resume este texto en 5 frases claras, sin quitar la idea principal.</div></div>
+      <div class="promptcard"><span class="ptag">Explicar fácil</span><div class="ptext">Explícame esto como si fuera un alumno de 2º de ESO, con un ejemplo fácil.</div></div>
+      <div class="promptcard"><span class="ptag">Ideas clave</span><div class="ptext">Saca las 4 ideas más importantes de estos apuntes, en formato lista.</div></div>
+      <div class="promptcard"><span class="ptag">Presentación</span><div class="ptext">Ayúdame a preparar una presentación de 5 diapositivas sobre este tema con formato pptx (o HTML).</div></div>
+      <div class="promptcard"><span class="ptag">Estudiar examen</span><div class="ptext">Hazme un resumen para estudiar este tema, organizado por puntos clave.</div></div>
+      <div class="promptcard"><span class="ptag">Test</span><div class="ptext">Convierte este tema en 10 preguntas tipo test con 4 opciones cada una.</div></div>
+      <div class="promptcard"><span class="ptag">Esquema</span><div class="ptext">Organiza este tema en un esquema con título, subtítulos y puntos clave.</div></div>
+      <div class="promptcard"><span class="ptag">Organizar trabajo</span><div class="ptext">Organízame este trabajo en pasos para hacerlo en dos días.</div></div>
+    </div>
+    <div class="foot-note"><p>El texto sobre el que trabajar puede ser un fichero adjunto con un fichero de texto, un pdf, una url de Internet, una transcripción de un vídeo de Youtube,
+      e incluso podéis extraer el texto de imágenes y pasarlos a texto con la propia IA o herramientas como "I love PDF".
+    </p></div>
+  </section>
+
+  <!-- 13 Prompts útiles día a día 2 -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Para llevarte</div>
+    <div class="slide-kicker">Prompts que puedes usar hoy mismo · parte 2</div>
+    <h1 class="slide-title">Sigue la lista</h1>
+    <div class="grid g4">
+      <div class="promptcard"><span class="ptag">Ejemplos</span><div class="ptext">No lo entiendo bien todavía, ponme dos ejemplos distintos de la vida real.</div></div>
+      <div class="promptcard"><span class="ptag">Corregir texto</span><div class="ptext">Corrige esta redacción y dime cómo mejorarla sin cambiar mi forma de escribir.</div></div>
+      <div class="promptcard"><span class="ptag">Exposición oral</span><div class="ptext">Ayúdame con un guion para una exposición de 3 minutos: intro, desarrollo y cierre.</div></div>
+      <div class="promptcard"><span class="ptag">Ideas creativas</span><div class="ptext">Dame 5 ideas originales para un vídeo corto sobre este tema.</div></div>
+      <div class="promptcard"><span class="ptag">Planificar estudio</span><div class="ptext">Ayúdame a repartir estos 4 temas en los próximos 5 días.</div></div>
+      <div class="promptcard"><span class="ptag">Comparar</span><div class="ptext">Hazme una tabla comparando estos dos conceptos: en qué se parecen y en qué no.</div></div>
+      <div class="promptcard"><span class="ptag">Tabla ordenada</span><div class="ptext">Ponme esta información en una tabla ordenada de más antigua a más reciente.</div></div>
+      <div class="promptcard"><span class="ptag">Mapa mental</span><div class="ptext">Créame una imagen para explicar de forma clara y ordenada los siguientes conceptos para mi nivel.</div></div>
+    </div>
+  </section>
+
+  <!-- 14 Plantilla -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Herramienta de apoyo</div>
+    <div class="slide-kicker">Para cuando te bloquees</div>
+    <h1 class="slide-title">La plantilla anti-bloqueo</h1>
+    <div class="template">
+      Actúa como <span class="fill">...</span><br>
+      Quiero que hagas <span class="fill">...</span><br>
+      Ten en cuenta que <span class="fill">...</span><br>
+      Dame la respuesta en este formato: <span class="fill">...</span><br>
+      No hagas <span class="fill">...</span>
+    </div>
+    <div class="foot-note">No hace falta rellenar las 5 líneas siempre. Úsala como chuleta cuando no sepas por dónde empezar.</div>
+  </section>
+
+  <!-- 15 Cierre -->
+  <section class="slide">
+    <div class="bubble">
+      <div class="slide-kicker">Para acabar</div>
+      <h1 class="slide-title">Pedir bien también es una habilidad<span class="cursor">&nbsp;</span></h1>
+      <p class="lead">Una buena pregunta cambia mucho la respuesta. Cuanto más practiquéis, más rápido se os va a dar sin ni siquiera pensarlo.</p>
+      <p class="lead">Próxima sesión: <b>generación de imagen, música y vídeo</b>. Ahí todo esto que habéis aprendido hoy se nota todavía más.</p>
+    </div>
+  </section>
+
+  <!-- 16 Gemini en la práctica -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Herramienta</div>
+    <div class="slide-kicker">Cosas que quizá no conocías de Gemini</div>
+    <h1 class="slide-title">Gemini en la práctica</h1>
+    <div class="grid g4">
+      <div class="card">
+        <svg class="icon sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1-3.5 4-5 7-5s6 1.5 7 5" stroke-linecap="round"/></svg>
+        <h3>Contexto personal</h3><p>Dale información de contexto para todos tus prompts (ajustes)</p>
+      </div>
+      <div class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v4M9 22h6" stroke-linecap="round"/></svg>
+        <h3>Voz</h3><p>Le puedes hablar en vez de escribir, y también te puede responder en voz.</p>
+      </div>
+      <div class="card">
+        <svg class="icon sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Modelo generativo"><circle cx="12" cy="12" r="2.8"/><circle cx="12" cy="5" r="1.6"/>
+          <circle cx="6" cy="9" r="1.6"/><circle cx="18" cy="9" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/>
+          <path d="M12 9.2V6.6"/>  <path d="M9.8 10.6L7.3 9.4"/>   <path d="M14.2 10.6L16.7 9.4"/>   <path d="M10.2 14.1L8.6 16.4"/>   <path d="M13.8 14.1L15.4 16.4"/> </svg>
+        <h3>Elige el modelo</h3><p>Dependiendo de la tarea selecciona el modelo más adecuado: 3.1 Flash-lite, 3.5 Flash, 3.1 Pro, Avanzado</p>
+      </div>
+      <div class="card">
+        <svg class="icon tool" viewBox="0 0 24 24" fill="none" stroke="#f28b82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Configuración">
+          <circle cx="12" cy="12" r="3.2"/>
+          <path d="M12 2.9l1.1.3.5 2a7 7 0 0 1 1.7.7l1.8-1 1.6 1.6-1 1.8c.3.5.5 1.1.7 1.7l2 .5.3 1.1-.3 1.1-2 .5a7 7 0 0 1-.7 1.7l1 1.8-1.6 1.6-1.8-1a7 7 0 0 1-1.7.7l-.5 2-1.1.3-1.1-.3-.5-2a7 7 0 0 1-1.7-.7l-1.8 1-1.6-1.6 1-1.8a7 7 0 0 1-.7-1.7l-2-.5-.3-1.1.3-1.1 2-.5a7 7 0 0 1 .7-1.7l-1-1.8 1.6-1.6 1.8 1a7 7 0 0 1 1.7-.7l.5-2z"/>
+        </svg>
+        <h3>Herramientas</h3><p>Crear imagen, crear música, Canvas, Aprendizaje guiado</p>
+      </div>
+      <div class="card">
+        <svg class="icon notebook" viewBox="0 0 24 24" fill="none" stroke="#7aa7ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="NotebookLM">
+          <path d="M7 4.5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a1.5 1.5 0 0 1-1.5-1.5V6A1.5 1.5 0 0 1 7 4.5z"/>
+          <path d="M9 4.5v15"/>
+          <path d="M7 7h2"/>
+          <path d="M7 10h2"/>
+          <path d="M7 13h2"/>
+          <path d="M7 16h2"/>
+          <path d="M12 9h4"/>
+          <path d="M12 12h2.3"/>
+          <path d="M13.8 15.7l.35.72.8.12-.58.56.14.78-.71-.38-.72.38.14-.78-.57-.56.79-.12.36-.72z"/>
+        </svg>
+        <h3>Cuadernos</h3><p>Usa los cuadernos NotebookLM para preparar temas recabando fuentes de Internet.</p>
+      </div>
+      <div class="card">
+        <svg class="icon gem" viewBox="0 0 24 24" fill="none" stroke="#59c77a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Gems de Gemini">
+          <path d="M7 6h10l3 4-8 8.8L4 10l3-4z"/>
+          <path d="M9.5 6l2.5 4 2.5-4"/>
+          <path d="M7 6l5 12.8L17 6"/>
+          <path d="M6.8 10h10.4"/>
+        </svg>
+        <h3>Gems</h3><p>Asistentes personalizados: les das instrucciones una vez y las recuerda siempre.</p>
+      </div>
+      <div class="card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11" /></svg>
+        <h3>Tablas</h3><p>Pídele que te ordene información en tabla: se lee mil veces mejor.</p>
+      </div>
+      <div class="card">
+        <svg class="icon coral" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l4 4v14H7V3z"/><path d="M14 3v4h4" /></svg>
+        <h3>Documentos</h3><p>Puedes subir un PDF o apuntes y preguntarle sobre ese contenido, o que te genere en formato Word, Markdown o PDF.</p>
+      </div>
+    </div>
+    <div class="foot-note">Actividades: crear un gem (resumenes), conectar aplicaciones de Google Workspace</div>
+  </section>
+
+    <!-- 16 ChatGPT en la práctica -->
+<section class="slide">
+  <div class="badge exp"><span class="b-dot"></span>Herramienta</div>
+  <div class="slide-kicker">Cosas que quizá no conocías de ChatGPT</div>
+  <h1 class="slide-title">ChatGPT en la práctica</h1>
+  <div class="grid g4">
+    <div class="card">
+      <svg class="icon sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="12" cy="8" r="3.2"/>
+        <path d="M5 20c1-3.5 4-5 7-5s6 1.5 7 5" stroke-linecap="round"/>
+      </svg>
+      <h3>Memoria y contexto</h3>
+      <p>Puede recordar información útil sobre ti o tu forma de trabajar para responder mejor en futuras conversaciones.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="9" y="2" width="6" height="12" rx="3"/>
+        <path d="M5 11a7 7 0 0 0 14 0M12 18v4M9 22h6" stroke-linecap="round"/>
+      </svg>
+      <h3>Voz</h3>
+      <p>Le puedes hablar en vez de escribir, mantener una conversación oral y recibir respuestas en voz.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Modelos IA">
+        <circle cx="12" cy="12" r="2.8"/>
+        <circle cx="12" cy="5" r="1.6"/>
+        <circle cx="6" cy="9" r="1.6"/>
+        <circle cx="18" cy="9" r="1.6"/>
+        <circle cx="8" cy="18" r="1.6"/>
+        <circle cx="16" cy="18" r="1.6"/>
+        <path d="M12 9.2V6.6"/>
+        <path d="M9.8 10.6L7.3 9.4"/>
+        <path d="M14.2 10.6L16.7 9.4"/>
+        <path d="M10.2 14.1L8.6 16.4"/>
+        <path d="M13.8 14.1L15.4 16.4"/>
+      </svg>
+      <h3>Modelos</h3>
+      <p>Según la tarea, ChatGPT puede apoyarse en distintos modelos o modos de uso para escribir, razonar, programar o crear.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon tool" viewBox="0 0 24 24" fill="none" stroke="#f28b82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Configuración">
+        <circle cx="12" cy="12" r="3.2"/>
+        <path d="M12 2.9l1.1.3.5 2a7 7 0 0 1 1.7.7l1.8-1 1.6 1.6-1 1.8c.3.5.5 1.1.7 1.7l2 .5.3 1.1-.3 1.1-2 .5a7 7 0 0 1-.7 1.7l1 1.8-1.6 1.6-1.8-1a7 7 0 0 1-1.7.7l-.5 2-1.1.3-1.1-.3-.5-2a7 7 0 0 1-1.7-.7l-1.8 1-1.6-1.6 1-1.8a7 7 0 0 1-.7-1.7l-2-.5-.3-1.1.3-1.1 2-.5a7 7 0 0 1 .7-1.7l-1-1.8 1.6-1.6 1.8 1a7 7 0 0 1 1.7-.7l.5-2z"/>
+      </svg>
+      <h3>Canvas</h3>
+      <p>Sirve como espacio de trabajo para escribir, revisar textos, editar cosas paso a paso o programar con ayuda de la IA.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon notebook" viewBox="0 0 24 24" fill="none" stroke="#7aa7ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Proyectos">
+        <path d="M7 4.5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a1.5 1.5 0 0 1-1.5-1.5V6A1.5 1.5 0 0 1 7 4.5z"/>
+        <path d="M9 4.5v15"/>
+        <path d="M7 7h2"/>
+        <path d="M7 10h2"/>
+        <path d="M7 13h2"/>
+        <path d="M7 16h2"/>
+        <path d="M12 9h4"/>
+        <path d="M12 12h4"/>
+        <path d="M12 15h2.8"/>
+      </svg>
+      <h3>Proyectos</h3>
+      <p>Permiten agrupar chats, archivos e instrucciones en un mismo espacio para trabajar mejor por temas o tareas.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon gem" viewBox="0 0 24 24" fill="none" stroke="#59c77a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="GPTs">
+        <path d="M7 6h10l3 4-8 8.8L4 10l3-4z"/>
+        <path d="M9.5 6l2.5 4 2.5-4"/>
+        <path d="M7 6l5 12.8L17 6"/>
+        <path d="M6.8 10h10.4"/>
+      </svg>
+      <h3>GPTs</h3>
+      <p>Son asistentes personalizados para una tarea concreta: les defines instrucciones, herramientas y a veces archivos.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="3" y="4" width="18" height="16" rx="2"/>
+        <path d="M3 9h18M9 9v11"/>
+      </svg>
+      <h3>Búsqueda web</h3>
+      <p>Puede buscar información actual en Internet y citar fuentes cuando la pregunta necesita datos recientes.</p>
+    </div>
+
+    <div class="card">
+      <svg class="icon coral" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M7 3h7l4 4v14H7V3z"/>
+        <path d="M14 3v4h4"/>
+      </svg>
+      <h3>Archivos e imágenes</h3>
+      <p>Puedes subir PDFs, apuntes o imágenes para analizarlos, y también pedirle que genere o edite imágenes.</p>
+    </div>
+  </div>
+
+  <div class="foot-note">Actividades: crear un proyecto con fuentes, prompts a aplicaciones (Canva, Wikilock, ...)</div>
+</section>
+
+</div>
+
+<div class="navbar">
+  <div class="dots" id="dots"></div>
+  <div class="navbtns">
+    <button id="prev">← anterior</button>
+    <button id="next">siguiente →</button>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsWrap = document.getElementById('dots');
+  const curLabel = document.getElementById('cur');
+  let idx = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function render(){
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+    curLabel.textContent = String(idx + 1).padStart(2, '0');
+    document.getElementById('prev').disabled = idx === 0;
+    document.getElementById('next').disabled = idx === slides.length - 1;
+    slides[idx].scrollTop = 0;
+  }
+  function go(i){ idx = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+
+  document.getElementById('prev').addEventListener('click', () => go(idx - 1));
+  document.getElementById('next').addEventListener('click', () => go(idx + 1));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(idx + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1); }
+  });
+
+  render();
+</script>
+
+</body>
+</html>

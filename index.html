@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller de IA generativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#131029;
+    --panel:#1d1840;
+    --panel-alt:#241c52;
+    --panel-line: rgba(237,234,251,0.10);
+    --lime:#d4ff3d;
+    --lime-dim: rgba(212,255,61,0.14);
+    --coral:#ff6b57;
+    --coral-dim: rgba(255,107,87,0.14);
+    --sky:#59c9f1;
+    --sky-dim: rgba(89,201,241,0.14);
+    --text:#edeaf6;
+    --muted:#a49bc9;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; min-height:100%; background:var(--ink); color:var(--text); font-family:var(--body); }
+  body{
+    background-image:
+      radial-gradient(circle at 8% 8%, rgba(212,255,61,0.07), transparent 40%),
+      radial-gradient(circle at 92% 90%, rgba(89,201,241,0.08), transparent 45%);
+    min-height:100vh;
+  }
+
+  .chatbar{
+    position:sticky; top:0; height:56px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; background:rgba(19,16,41,0.85); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--panel-line); z-index:20;
+  }
+  .chatbar-left{display:flex; align-items:center; gap:10px;}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite;}
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(212,255,61,0.55);} 70%{box-shadow:0 0 0 8px rgba(212,255,61,0);} 100%{box-shadow:0 0 0 0 rgba(212,255,61,0);} }
+  .chatbar-title{font-family:var(--display); font-weight:600; font-size:14.5px;}
+  .chatbar-sub{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:8px;}
+  .chatbar-right{font-family:var(--mono); font-size:12px; color:var(--muted);}
+
+  .hero{ padding:9vh 8vw 4vh 8vw; max-width:1200px; }
+  .kicker{ font-family:var(--mono); color:var(--sky); font-size:14px; letter-spacing:0.08em; text-transform:uppercase; }
+  h1{ font-family:var(--display); font-weight:700; font-size:clamp(38px,6.4vw,72px); line-height:1.03; margin:14px 0 14px 0; }
+  h1 .cursor{ display:inline-block; width:0.5ch; background:var(--lime); animation: blink 1s step-end infinite; margin-left:2px; }
+  @keyframes blink{ 50%{opacity:0;} }
+  .hero p{ font-size:18px; color:var(--muted); max-width:680px; line-height:1.6; }
+
+  .track{
+    display:flex; align-items:center; gap:8px; margin:30px 0 0 0; flex-wrap:wrap;
+    font-family:var(--mono); font-size:12.5px; color:var(--muted);
+  }
+  .track .seg{ height:6px; width:46px; border-radius:4px; background:var(--panel-line); }
+  .track .seg.done{ background:var(--lime); }
+
+  .sessions{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:22px;
+    padding:2vh 8vw 10vh 8vw; max-width:1200px;
+  }
+  .card{
+    position:relative; display:block; text-decoration:none; color:var(--text);
+    background:var(--panel); border:1px solid var(--panel-line); border-radius:22px;
+    padding:30px 32px; transition:transform 0.2s ease, border-color 0.2s ease;
+  }
+  .card:hover{ transform:translateY(-4px); border-color:rgba(212,255,61,0.4); }
+  .card .num{ font-family:var(--display); font-weight:700; font-size:15px; color:var(--sky); }
+  .card h2{ font-family:var(--display); font-weight:700; font-size:26px; margin:10px 0 10px 0; line-height:1.15; }
+  .card p{ font-size:14.5px; color:var(--muted); line-height:1.5; margin:0 0 18px 0; max-width:420px; }
+  .card .foot{ display:flex; align-items:center; justify-content:space-between; }
+  .status{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    padding:5px 12px; border-radius:100px;
+  }
+  .status.ready{ background:var(--lime-dim); color:var(--lime); border:1px solid rgba(212,255,61,0.3); }
+  .status.soon{ background:var(--coral-dim); color:var(--coral); border:1px solid rgba(255,107,87,0.3); }
+  .go{ font-family:var(--mono); font-size:13px; color:var(--muted); display:flex; align-items:center; gap:6px; }
+  .card:hover .go{ color:var(--lime); }
+  .tag-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .tag{ font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:8px; background:var(--panel-alt); border:1px solid var(--panel-line); color:var(--muted); }
+
+  footer{
+    padding:0 8vw 6vh 8vw; font-family:var(--mono); font-size:12px; color:var(--muted);
+    border-top:1px dashed var(--panel-line); max-width:1200px; margin:0 8vw; padding-top:20px;
+  }
+
+  @media (max-width: 860px){
+    .sessions{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chatbar">
+  <div class="chatbar-left">
+    <div class="dot"></div>
+    <span class="chatbar-title">IA · Taller generativa</span>
+    <span class="chatbar-sub">12–16 años</span>
+  </div>
+  <div class="chatbar-right">4 sesiones</div>
+</div>
+
+<div class="hero">
+  <div class="kicker">Taller de verano</div>
+  <h1>Taller de IA<br>generativa<span class="cursor">&nbsp;</span></h1>
+  <p>Cuatro sesiones prácticas para descubrir, usar y entender la IA generativa: desde el primer chat hasta un proyecto final propio. Con herramientas gratuitas y cuenta de Google.</p>
+  <div class="track">
+    <span class="seg done"></span><span class="seg done"></span><span class="seg"></span><span class="seg"></span>
+    <span>2 de 4 sesiones listas</span>
+  </div>
+</div>
+
+<div class="sessions">
+
+  <a class="card" href="Sesión 1/index.html">
+    <div class="num">Sesión 01</div>
+    <h2>Descubrir y probar</h2>
+    <div class="tag-row"><span class="tag">Qué es la IA</span><span class="tag">Tipos y modelos</span><span class="tag">Privacidad</span></div>
+    <p>Primer contacto con un chat de IA, tipos de IA, campos de aplicación, tokens y protección de datos.</p>
+    <div class="foot">
+      <span class="status ready">Disponible</span>
+      <span class="go">abrir →</span>
+    </div>
+  </a>
+
+  <a class="card" href="Sesión 2/index.html">
+    <div class="num">Sesión 02</div>
+    <h2>Aprender a pedir bien</h2>
+    <div class="tag-row"><span class="tag">Prompts</span><span class="tag">Roles</span><span class="tag">Retos</span></div>
+    <p>Ingeniería de prompts: las 5 piezas de un buen prompt, iteración, roles, prompt battles y una chuleta de prompts para el día a día.</p>
+    <div class="foot">
+      <span class="status ready">Disponible</span>
+      <span class="go">abrir →</span>
+    </div>
+  </a>
+
+  <a class="card" href="Sesión 3/index.html">
+    <div class="num">Sesión 03</div>
+    <h2>Imagen, música y vídeo</h2>
+    <div class="tag-row"><span class="tag">Nano Banana</span><span class="tag">Suno</span><span class="tag">Veo 3</span></div>
+    <p>Generación multimedia con IA: imagen, música y vídeo, más el bloque de ética y derechos de autor.</p>
+    <div class="foot">
+      <span class="status soon">Próximamente</span>
+      <span class="go">abrir →</span>
+    </div>
+  </a>
+
+  <a class="card" href="Sesión 4/index.html">
+    <div class="num">Sesión 04</div>
+    <h2>Proyecto final</h2>
+    <div class="tag-row"><span class="tag">NotebookLM</span><span class="tag">Proyecto</span><span class="tag">Agentes</span></div>
+    <p>IA aplicada al estudio con NotebookLM y proyecto final combinando todo lo aprendido en el taller.</p>
+    <p>Introducción a la IA Agéntica</p>
+    <div class="foot">
+      <span class="status soon">Próximamente</span>
+      <span class="go">abrir →</span>
+    </div>
+  </a>
+
+</div>
+
+<footer>Taller de IA generativa · pensado para proyectar en clase · navegación por diapositivas dentro de cada sesión</footer>
+
+</body>
+</html>
