@@ -1,51 +1,760 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión 3 · Imagen, música y vídeo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#131029; --panel:#1d1840; --panel-line: rgba(237,234,251,0.10);
-    --lime:#d4ff3d; --coral:#ff6b57; --sky:#59c9f1;
-    --text:#edeaf6; --muted:#a49bc9;
-    --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0; height:100%; background:var(--ink); color:var(--text); font-family:var(--body);}
-  body{
-    display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
-    padding:8vh 8vw;
-    background-image:
-      radial-gradient(circle at 8% 12%, rgba(212,255,61,0.06), transparent 40%),
-      radial-gradient(circle at 92% 85%, rgba(89,201,241,0.07), transparent 45%);
-  }
-  .kicker{font-family:var(--mono); color:var(--sky); font-size:14px; letter-spacing:0.08em; text-transform:uppercase;}
-  h1{font-family:var(--display); font-weight:700; font-size:clamp(34px,6vw,66px); line-height:1.05; margin:14px 0 12px 0;}
-  p{font-size:17px; color:var(--muted); max-width:600px; line-height:1.55;}
-  .badge{
-    display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px;
-    letter-spacing:0.05em; text-transform:uppercase; padding:7px 14px; border-radius:100px;
-    background:rgba(255,107,87,0.14); color:var(--coral); border:1px solid rgba(255,107,87,0.3);
-    margin-top:22px;
-  }
-  .badge .b-dot{width:6px; height:6px; border-radius:50%; background:currentColor; animation:pulse 2s infinite;}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,107,87,0.5);}70%{box-shadow:0 0 0 8px rgba(255,107,87,0);}100%{box-shadow:0 0 0 0 rgba(255,107,87,0);}}
-  a.back{
-    margin-top:44px; font-family:var(--mono); font-size:13.5px; color:var(--text);
-    text-decoration:none; border:1px solid var(--panel-line); background:var(--panel);
-    padding:10px 18px; border-radius:9px; display:inline-flex; align-items:center; gap:8px;
-  }
-  a.back:hover{border-color:var(--lime); color:var(--lime);}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sesión 3 · Crear y cuestionar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#131029;
+      --panel:#1d1840;
+      --panel-alt:#241c52;
+      --panel-line:rgba(237,234,251,0.10);
+      --lime:#d4ff3d;
+      --lime-dim:rgba(212,255,61,0.14);
+      --coral:#ff6b57;
+      --coral-dim:rgba(255,107,87,0.14);
+      --sky:#59c9f1;
+      --sky-dim:rgba(89,201,241,0.14);
+      --violet:#b998ff;
+      --violet-dim:rgba(185,152,255,0.14);
+      --text:#edeaf6;
+      --muted:#a49bc9;
+      --display:"Space Grotesk",sans-serif;
+      --body:"Inter",sans-serif;
+      --mono:"IBM Plex Mono",monospace;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;background:var(--ink);color:var(--text);font-family:var(--body);overflow:hidden}
+    body{
+      background-image:
+        radial-gradient(circle at 8% 12%, rgba(212,255,61,0.06), transparent 40%),
+        radial-gradient(circle at 92% 85%, rgba(89,201,241,0.07), transparent 45%),
+        radial-gradient(circle at 70% 20%, rgba(185,152,255,0.06), transparent 32%),
+        linear-gradient(180deg, #141033 0%, #131029 100%);
+    }
+
+    .chatbar{
+      position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 22px;background:rgba(19,16,41,0.85);backdrop-filter:blur(6px);border-bottom:1px solid var(--panel-line);z-index:20;
+    }
+    .chatbar-left{display:flex;align-items:center;gap:10px}
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(212,255,61,0.6);animation:pulse 2s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,255,61,0.55)}70%{box-shadow:0 0 0 8px rgba(212,255,61,0)}100%{box-shadow:0 0 0 0 rgba(212,255,61,0)}}
+    .chatbar-title{font-family:var(--display);font-weight:600;font-size:14.5px;letter-spacing:0.01em}
+    .chatbar-sub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:8px}
+    .chatbar-right{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+    .chatbar-right b{color:var(--text)}
+
+    .deck{position:relative;width:100%;height:100%;padding-top:56px;padding-bottom:74px}
+    .slide{position:absolute;inset:56px 0 74px 0;display:none;padding:5vh 7vw;overflow-y:auto}
+    .slide.active{display:flex;flex-direction:column;justify-content:center;animation:rise .5s ease}
+    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+    .badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px;width:fit-content;margin-bottom:22px;border:1px solid transparent}
+    .badge.exp{background:var(--sky-dim);color:var(--sky);border-color:rgba(89,201,241,0.3)}
+    .badge.act{background:var(--lime-dim);color:var(--lime);border-color:rgba(212,255,61,0.3)}
+    .badge.alert{background:var(--coral-dim);color:var(--coral);border-color:rgba(255,107,87,0.3)}
+    .badge.crea{background:var(--violet-dim);color:var(--violet);border-color:rgba(185,152,255,0.3)}
+    .badge .b-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+    .bubble{position:relative;background:var(--panel);border:1px solid var(--panel-line);border-radius:22px;padding:34px 40px;max-width:980px}
+    .bubble:before{content:"";position:absolute;left:34px;bottom:-9px;width:20px;height:20px;background:var(--panel);border-left:1px solid var(--panel-line);border-bottom:1px solid var(--panel-line);clip-path:polygon(0 0,100% 100%,0 100%)}
+    .slide-kicker{font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:14px}
+    h1.slide-title{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.8vw,46px);line-height:1.08;margin:0 0 6px 0;max-width:940px}
+    h1.slide-title .cursor{display:inline-block;width:.5ch;background:var(--lime);animation:blink 1s step-end infinite;margin-left:2px}
+    @keyframes blink{50%{opacity:0}}
+    p.lead{font-size:16.5px;line-height:1.55;color:var(--text);max-width:790px;margin:14px 0 0 0}
+    p.lead b{color:var(--lime)}
+    p.note-strong{font-size:16px;line-height:1.55;color:var(--text);max-width:800px;margin:16px 0 0 0}
+    p.note-strong b{color:var(--coral)}
+    ul.points{list-style:none;margin:20px 0 0 0;padding:0;max-width:860px}
+    ul.points li{position:relative;padding-left:26px;margin-bottom:12px;font-size:15.5px;line-height:1.5;color:var(--text)}
+    ul.points li:before{content:"✦";position:absolute;left:0;top:1px;color:var(--lime);font-size:14px}
+
+    .grid{display:grid;gap:16px;margin-top:22px}
+    .grid.g2{grid-template-columns:1fr 1fr}
+    .grid.g3{grid-template-columns:repeat(3,1fr)}
+    .grid.g4{grid-template-columns:repeat(4,1fr)}
+    .grid.g5{grid-template-columns:repeat(5,1fr)}
+    .grid.g6{grid-template-columns:repeat(6,1fr)}
+    .card{background:var(--panel-alt);border:1px solid var(--panel-line);border-radius:16px;padding:16px 18px}
+    .card h3{font-family:var(--display);font-size:15.5px;margin:9px 0 6px 0}
+    .card p{font-size:13px;color:var(--muted);line-height:1.45;margin:0}
+    .col-title{font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:10px}
+    .col-title.sky{color:var(--sky)} .col-title.lime{color:var(--lime)} .col-title.coral{color:var(--coral)} .col-title.violet{color:var(--violet)}
+    .foot-note{margin-top:24px;font-family:var(--mono);font-size:11.5px;color:var(--muted);border-top:1px dashed var(--panel-line);padding-top:12px;max-width:860px}
+
+    .title-slide{justify-content:center;align-items:flex-start}
+    .title-slide .kicker{font-family:var(--mono);color:var(--sky);font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+    .title-slide h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6.2vw,76px);line-height:1.03;margin:14px 0 10px 0;max-width:980px}
+    .title-slide .sub{font-size:18px;color:var(--muted);max-width:700px}
+    .title-slide .startline{margin-top:38px;font-family:var(--mono);font-size:13.5px;color:var(--lime);display:flex;align-items:center;gap:10px}
+    .back{margin-top:44px;font-family:var(--mono);font-size:13.5px;color:var(--text);text-decoration:none;border:1px solid var(--panel-line);background:var(--panel);padding:10px 18px;border-radius:9px;display:inline-flex;align-items:center;gap:8px}
+    .back:hover{border-color:var(--lime);color:var(--lime)}
+
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:end;margin-top:24px;max-width:1040px}
+    .hero-panel{background:linear-gradient(180deg, rgba(36,28,82,.95), rgba(29,24,64,.92));border:1px solid var(--panel-line);border-radius:22px;padding:22px}
+    .mini-stage{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+    .mock{min-height:180px;border-radius:18px;border:1px solid var(--panel-line);padding:14px;position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(89,201,241,.08), rgba(185,152,255,.06))}
+    .mock h4{margin:0 0 8px 0;font-family:var(--display);font-size:14px}
+    .mock p{font-size:12.5px;color:var(--muted);margin:0}
+    .cover-art{background:
+      radial-gradient(circle at 30% 30%, rgba(212,255,61,.35), transparent 30%),
+      radial-gradient(circle at 70% 35%, rgba(89,201,241,.26), transparent 28%),
+      linear-gradient(160deg,#20174a,#0f1637 65%,#101d3a);
+    }
+    .wavebars{display:flex;align-items:flex-end;gap:5px;height:86px;margin-top:26px}
+    .wavebars span{display:block;flex:1;border-radius:8px 8px 2px 2px;background:linear-gradient(180deg,var(--violet),var(--sky));animation:beat 1.8s ease-in-out infinite}
+    .wavebars span:nth-child(2){animation-delay:.15s}.wavebars span:nth-child(3){animation-delay:.3s}.wavebars span:nth-child(4){animation-delay:.45s}.wavebars span:nth-child(5){animation-delay:.6s}.wavebars span:nth-child(6){animation-delay:.75s}
+    @keyframes beat{0%,100%{height:28%}50%{height:95%}}
+    .clip-shot{background:
+      linear-gradient(135deg, rgba(255,107,87,.18), rgba(89,201,241,.12)),
+      linear-gradient(180deg,#1a163d,#11162b);
+    }
+    .clip-frame{margin-top:22px;border:1px solid rgba(237,234,251,.16);border-radius:14px;padding:10px;background:rgba(19,16,41,.38)}
+    .clip-frame .line{height:8px;border-radius:999px;background:rgba(237,234,251,.1);margin:8px 0;overflow:hidden}
+    .clip-frame .line span{display:block;height:100%;width:58%;background:linear-gradient(90deg,var(--coral),var(--sky));border-radius:999px}
+
+    .compare-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:stretch;margin-top:24px;max-width:980px}
+    .compare-card{border-radius:16px;padding:20px 22px;border:1px solid var(--panel-line)}
+    .compare-card.bad{background:var(--coral-dim);border-color:rgba(255,107,87,.3)}
+    .compare-card.good{background:var(--lime-dim);border-color:rgba(212,255,61,.3)}
+    .compare-card .tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:block}
+    .compare-card.bad .tag{color:var(--coral)}
+    .compare-card.good .tag{color:var(--lime)}
+    .compare-text{font-family:var(--mono);font-size:13.2px;line-height:1.52;color:var(--text);white-space:pre-line}
+    .compare-mid{display:flex;align-items:center;justify-content:center;font-family:var(--mono);color:var(--muted);font-size:22px}
+
+    .pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .chip{font-family:var(--mono);font-size:12px;padding:6px 12px;border-radius:9px;background:var(--panel-alt);border:1px solid var(--panel-line);color:var(--text)}
+    .chip.sky{color:var(--sky)} .chip.lime{color:var(--lime)} .chip.coral{color:var(--coral)} .chip.violet{color:var(--violet)}
+
+    .errors-grid .card h3{color:var(--coral)}
+    .prompt-card{background:var(--panel-alt);border:1px solid var(--panel-line);border-radius:14px;padding:14px 16px}
+    .prompt-card .ptag{font-family:var(--mono);font-size:10.5px;color:var(--sky);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:block}
+    .prompt-card .ptext{font-family:var(--mono);font-size:12.5px;color:var(--text);line-height:1.45}
+    .prompt-card .ptext:before,.prompt-card .ptext:after{content:'"';color:var(--lime)}
+
+    .flow{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch;margin-top:24px;max-width:1040px}
+    .flow-step{flex:1;min-width:200px;background:var(--panel-alt);border:1px solid var(--panel-line);border-radius:16px;padding:18px 20px;position:relative}
+    .flow-step .num{font-family:var(--display);font-size:26px;color:var(--sky);font-weight:700}
+    .flow-step h4{font-family:var(--display);font-size:14.5px;margin:8px 0 6px 0}
+    .flow-step p{font-size:12.5px;color:var(--muted);margin:0;line-height:1.45}
+    .flow-arrow{align-self:center;color:var(--muted);font-family:var(--mono);font-size:20px}
+
+    .timeline{display:grid;gap:14px;margin-top:24px;max-width:860px}
+    .timeline .row{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start}
+    .timeline .when{font-family:var(--mono);font-size:12px;color:var(--sky);text-transform:uppercase;letter-spacing:.06em;padding-top:5px}
+    .timeline .what{background:var(--panel-alt);border:1px solid var(--panel-line);border-radius:14px;padding:14px 16px}
+    .timeline .what h4{margin:0 0 6px 0;font-family:var(--display);font-size:15px}
+    .timeline .what p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+
+    .quote-slide{max-width:1000px}
+    .quote-box{background:linear-gradient(180deg, rgba(36,28,82,.9), rgba(29,24,64,.9));border:1px solid var(--panel-line);border-radius:24px;padding:42px 42px 34px;max-width:980px}
+    .quote-box h1{font-family:var(--display);font-size:clamp(32px,5vw,58px);line-height:1.05;margin:0 0 16px 0}
+    .quote-box p{font-size:17px;color:var(--muted);margin:0;max-width:760px}
+
+    .ethic-grid .card,.local-grid .card{min-height:150px}
+    .local-grid .card h3{display:flex;align-items:center;gap:8px}
+
+    .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px;max-width:880px}
+    .checklist div{background:var(--coral-dim);border:1px solid rgba(255,107,87,0.3);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);display:flex;align-items:center;gap:10px}
+    .checklist div:before{content:"✕";color:var(--coral);font-weight:700}
+
+    .matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;max-width:980px}
+    .matrix .box{background:var(--panel-alt);border:1px solid var(--panel-line);border-radius:16px;padding:16px}
+    .matrix .box h4{font-family:var(--display);font-size:15px;margin:0 0 6px 0}
+    .matrix .box p{font-size:13px;color:var(--muted);margin:0;line-height:1.45}
+
+    .navbar{position:fixed;left:0;right:0;bottom:0;height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:rgba(19,16,41,0.85);backdrop-filter:blur(6px);border-top:1px solid var(--panel-line);z-index:20}
+    .dots{display:flex;gap:6px;flex-wrap:wrap;max-width:60%}
+    .dots span{width:7px;height:7px;border-radius:50%;background:var(--panel-line);cursor:pointer;transition:background .2s,transform .2s}
+    .dots span.on{background:var(--lime);transform:scale(1.25)}
+    .navbtns{display:flex;gap:10px}
+    .navbtns button{font-family:var(--mono);font-size:13px;color:var(--text);background:var(--panel-alt);border:1px solid var(--panel-line);padding:9px 16px;border-radius:9px;cursor:pointer}
+    .navbtns button:hover{border-color:var(--lime);color:var(--lime)}
+    .navbtns button:disabled{opacity:.3;cursor:default}
+    .navbtns button:disabled:hover{border-color:var(--panel-line);color:var(--text)}
+
+    @media (max-width: 980px){
+      .grid.g4,.grid.g5,.grid.g6,.matrix{grid-template-columns:repeat(2,1fr)}
+      .grid.g3,.grid.g2,.hero-grid{grid-template-columns:1fr}
+      .compare-wrap{grid-template-columns:1fr}
+      .compare-mid{transform:rotate(90deg)}
+      .timeline .row{grid-template-columns:1fr}
+      .checklist{grid-template-columns:1fr}
+      .flow{flex-direction:column}
+      .flow-arrow{display:none}
+      .mini-stage{grid-template-columns:1fr}
+      .dots{max-width:40%}
+    }
+    @media (max-width: 700px){
+      .slide{padding:4.5vh 5vw}
+      .bubble,.quote-box,.hero-panel{padding:24px 22px}
+      .card{padding:14px}
+      .grid.g4,.grid.g5,.grid.g6,.grid.g3,.matrix{grid-template-columns:1fr}
+    }
+
+    .tool-link{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  text-decoration:none;
+  color:var(--text);
+  background:var(--panel-alt);
+  border:1px solid var(--panel-line);
+  border-radius:16px;
+  padding:16px 18px;
+  min-height:120px;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.tool-link::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(212,255,61,0.10), rgba(89,201,241,0.08), transparent 60%);
+  opacity:0;
+  transition:opacity .18s ease;
+}
+
+.tool-link:hover{
+  transform:translateY(-4px);
+  border-color:rgba(212,255,61,0.35);
+  box-shadow:0 10px 24px rgba(0,0,0,0.22);
+}
+
+.tool-link:hover::before{
+  opacity:1;
+}
+
+.tool-link strong{
+  font-family:var(--display);
+  font-size:15.5px;
+  font-weight:600;
+  color:var(--text);
+  position:relative;
+  z-index:1;
+}
+
+.tool-link small{
+  font-family:var(--body);
+  font-size:13px;
+  color:var(--muted);
+  position:relative;
+  z-index:1;
+}
+
+.tool-kicker{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--sky);
+  position:relative;
+  z-index:1;
+}
+  </style>
 </head>
 <body>
-  <div class="kicker">Taller de IA generativa · Sesión 3 de 4</div>
-  <h1>Imagen, música<br>y vídeo</h1>
-  <p>Generación de imagen, música y vídeo con IA, más el bloque de ética y privacidad. Esta sesión está en preparación.</p>
-  <div class="badge"><span class="b-dot"></span>En construcción</div>
-  <a class="back" href="../index.html">← volver al taller</a>
+  <div class="chatbar">
+    <div class="chatbar-left">
+      <div class="dot"></div>
+      <span class="chatbar-title">IA · Sesión 3</span>
+      <span class="chatbar-sub">Crear y cuestionar</span>
+    </div>
+    <div class="chatbar-right"><b id="cur">01</b>/22</div>
+  </div>
+
+  <div class="deck" id="deck">
+    <section class="slide active title-slide">
+      <div class="kicker">Taller de IA generativa · Sesión 3 de 4</div>
+      <h1>Crear <br>y cuestionar</h1>
+      <p class="sub">Imagen, música y vídeo con IA · ética, privacidad y pensamiento crítico. Hoy toca la parte más vistosa… y también la que más exige criterio.</p>
+      <div class="startline">pulsa → o espacio para empezar</div>
+      <a class="back" href="../index.html">← volver al taller</a>
+    </section>
+
+    <section class="slide">
+      <div class="badge exp"><span class="b-dot"></span>Conexión</div>
+      <div class="bubble">
+        <div class="slide-kicker">Venimos de ahí</div>
+        <h1 class="slide-title">De descubrir, a pedir mejor… y ahora a crear con criterio</h1>
+        <p class="lead">Si en la sesión 1 descubristeis qué era la IA y en la 2 aprendisteis a <b>pedir mejor</b>, ahora vamos a usarla para crear… y también para cuestionarla.</p>
+        <ul class="points">
+          <li>Lo creativo engancha mucho: imagen, música, clips, ideas visuales.</li>
+          <li>Pero cuanto más impresiona una herramienta, más importante es usarla con cabeza.</li>
+          <li>Hoy no va solo de “mira qué guapo queda”, sino de entender qué estás haciendo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge act"><span class="b-dot"></span>Activación</div>
+      <div class="slide-kicker">Mismo punto de partida, tres resultados</div>
+      <h1 class="slide-title">¿Qué creéis que pidió la persona para conseguir esto?</h1>
+      <div class="hero-grid">
+        <div class="hero-panel">
+          <div class="col-title violet">Proyecto creativo con IA</div>
+          <div class="mini-stage">
+            <div class="mock cover-art">
+              <h4>Imagen</h4>
+              <p>Portada de disco con identidad visual clara.</p>
+            </div>
+            <div class="mock">
+              <h4>Canción</h4>
+              <p>Letra, estilo y emoción coherentes con esa portada.</p>
+              <div class="wavebars"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </div>
+            <div class="mock clip-shot">
+              <h4>Vídeo</h4>
+              <p>Un clip breve que mantiene la misma estética.</p>
+              <div class="clip-frame">
+                <div class="line"><span></span></div>
+                <div class="line"><span style="width:78%"></span></div>
+                <div class="line"><span style="width:42%"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="col-title lime">La idea clave</div>
+          <p class="lead" style="margin-top:0">Un buen resultado creativo casi nunca sale de un prompt flojo. Cuanto más claro eres con la idea, el estilo y la intención, más probable es que salga algo potente.</p>
+          <div class="pill-row">
+            <span class="chip sky">qué quieres</span>
+            <span class="chip violet">cómo debe verse</span>
+            <span class="chip lime">qué emoción transmite</span>
+            <span class="chip coral">qué hay que corregir</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge crea"><span class="b-dot"></span>Imagen</div>
+      <div class="slide-kicker">Portada de un disco</div>
+      <h1 class="slide-title">Una imagen mejora muchísimo cuando el prompt ya pinta la escena</h1>
+      <div class="grid g6">
+        <div class="card"><div class="col-title lime">Tema</div><p>Qué aparece realmente: artista, portada, escenario, objeto, personaje.</p></div>
+        <div class="card"><div class="col-title sky">Estilo</div><p>Anime, foto editorial, collage, cómic, cyberpop, acuarela…</p></div>
+        <div class="card"><div class="col-title coral">Colores</div><p>Paleta dominante, contraste, tonos fríos o cálidos.</p></div>
+        <div class="card"><div class="col-title violet">Ambiente</div><p>Oscuro, épico, nostálgico, alegre, extraño, futurista.</p></div>
+        <div class="card"><div class="col-title lime">Composición</div><p>Primer plano, simetría, cartel vertical, fondo limpio, plano cenital.</p></div>
+        <div class="card"><div class="col-title sky">Público</div><p>No es igual diseñar para peques, para adolescentes o para un festival indie.</p></div>
+      </div>
+      <div class="foot-note">Cuantas más pistas visuales das, menos tiene que “inventarse” la herramienta por su cuenta.</div>
+    </section>
+
+    <section class="slide">
+      <div class="badge act"><span class="b-dot"></span>Actividad</div>
+      <div class="slide-kicker">Crear la portada del primer disco</div>
+      <h1 class="slide-title">Reto de imagen: inventad un artista o grupo ficticio</h1>
+      <div class="compare-wrap">
+        <div class="compare-card bad">
+          <span class="tag">Prompt flojo</span>
+          <div class="compare-text">Hazme una portada de disco chula.</div>
+        </div>
+        <div class="compare-mid">→</div>
+        <div class="compare-card good">
+          <span class="tag">Prompt más útil</span>
+          <div class="compare-text">Crea la portada del primer disco de un artista ficticio de pop espacial adolescente. Estilo visual mezcla de foto editorial y neón suave. Colores morado, azul y plata. Debe transmitir emoción de verano nocturno y ganas de empezar algo nuevo. Añade un personaje principal en primer plano y un fondo que parezca una ciudad futurista.</div>
+        </div>
+      </div>
+      <div class="pill-row">
+        <span class="chip">estilo visual</span>
+        <span class="chip">emoción o atmósfera</span>
+        <span class="chip">elementos principales</span>
+        <span class="chip">colores</span>
+        <span class="chip">encuadre o composición</span>
+      </div>
+      <div class="foot-note">Se puede hacer con Gemini (Nano Banana 2), ChatGPT, MetaAI o una herramienta equivalente.</div>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Aviso</div>
+      <div class="slide-kicker">Lo que a veces falla</div>
+      <h1 class="slide-title">Errores típicos en imagen generada</h1>
+      <div class="grid g4 errors-grid">
+        <div class="card"><h3>Texto raro</h3><p>Carteles, nombres o letras que parecen idioma alienígena.</p></div>
+        <div class="card"><h3>Manos extrañas</h3><p>Dedos de más, posturas imposibles o detalles anatómicos raros.</p></div>
+        <div class="card"><h3>Detalles absurdos</h3><p>Sombras sin sentido, objetos mezclados o cosas que “casi” funcionan.</p></div>
+        <div class="card"><h3>Elementos incoherentes</h3><p>La imagen impresiona de lejos, pero al mirarla bien no cuadra.</p></div>
+      </div>
+      <h1 class="slide-title" style="margin-top:20px;">Consejos para mejorar los resultados:</h1>
+      <div class="grid g4 local-grid">
+        <div class="card"><h3>Usa ejemplos</h3><p>La IA generativa trabaja mejor sobre un ejemplo de imagen, así que dale algo parecido a lo que buscas.</p></div>
+        <div class="card"><h3>Es buenísima editando imágenes</h3><p>Puedes usarla como si fuera Photoshop. Meta AI lo clava, hace cambios sin cambiar el resto de la imagen.</p></div>
+        <div class="card"><h3>Refinar sí, pero hasta cierto punto</h3><p>El refinamiento va perdiendo calidad en las nuevas imágenes creadas.</p></div>
+        <div class="card"><h3>Lo más importante al principio</h3><p>La mayoría de modelos dan más peso a las palabras que aparecen primero.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge act"><span class="b-dot"></span>Actividad</div>
+      <div class="slide-kicker">Comparando resultados de diferenes modelos</div>
+      <h1 class="slide-title">Crear un avatar que os represente (real o de una identidad ficticia/personaje de rol)</h1>
+      <p class="lead">Recuerda: estilo visual, emoción o atmósfera, elementos principales, colores, composición</p>
+      <div class="grid g5">
+        <div class="card">
+          <div class="col-title lime">Gemini</div>
+           <a class="tool-link" href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Nano Banana 2</strong>
+          </a>
+        </div>
+       <div class="card">
+          <div class="col-title lime">ChatGPT</div>
+           <a class="tool-link" href="https://chatgpt.com" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>GPT-Image</strong>
+          </a>
+        </div>
+        <div class="card">
+          <div class="col-title lime">Meta AI</div>
+           <a class="tool-link" href="https://meta.ai" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Muse Image</strong>
+          </a>
+        </div>
+        <div class="card">
+          <div class="col-title lime">ByteDance</div>
+           <a class="tool-link" href="https://seedream-4.ai/es/home" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Seedream 4.0</strong>
+          </a>
+        </div>
+        <div class="card">
+          <div class="col-title lime">Flux</div>
+           <a class="tool-link" href="https://flux1ai.com/es/create" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Flux 1</strong>
+          </a>
+        </div>
+      </div>
+      <div class="foot-note">Digital illustration avatar portrait of a fictional teenage boy character named 'Kael', around 14-15 years old appearance, stylized anime/cartoon art style (not photorealistic), short messy dark brown hair, bright green eyes, wearing a black hoodie with a subtle geometric logo, neutral confident expression, square profile picture crop, soft studio lighting from the front-left, clean solid dark gradient background (deep blue to purple), digital painting style with clean line art and soft cel-shading, high detail on face and hair, centered composition, 1:1 aspect ratio, vibrant but not oversaturated colors</div>
+    
+    </section>
+
+    <section class="slide">
+      <div class="badge crea"><span class="b-dot"></span>Música</div>
+      <div class="slide-kicker">Una canción para ese artista</div>
+      <h1 class="slide-title">También aquí importa muchísimo cómo lo pides</h1>
+      <div class="grid g5">
+        <div class="card"><div class="col-title lime">Estilo musical</div><p>Pop, trap melódico, rock épico, reguetón, synthwave…</p></div>
+        <div class="card"><div class="col-title sky">Tema de la letra</div><p>Vacaciones, amistad, final de curso, miedo escénico, nostalgia.</p></div>
+        <div class="card"><div class="col-title coral">Tono emocional</div><p>Eufórico, triste, gracioso, desafiante, íntimo.</p></div>
+        <div class="card"><div class="col-title violet">Ritmo</div><p>Lento, bailable, pegadizo, explosivo, calmado.</p></div>
+        <div class="card"><div class="col-title lime">Público</div><p>Para peña del insti, para TikTok, para una peli, para un festival.</p></div>
+      </div>
+      <div class="bubble" style="margin-top:24px">
+        <div class="slide-kicker">Actividad</div>
+        <p class="lead" style="margin-top:0">Cread una canción en Suno u otra herramienta (Gemini 30segs., Mubert, Soundraw ...) y haced que encaje con la portada. La gracia es que no sean piezas sueltas, sino un <b>proyecto creativo coherente</b>.</p>
+        <div class="pill-row">
+          <span class="chip coral">canción del verano en Mojácar</span>
+          <span class="chip sky">tema épico sobre el final de las vacaciones</span>
+        </div>
+      </div>
+      <div class="foot-note">ELEVENLABS tiene herramientas para varias acciones con audio</div>
+    </section>
+
+    <section class="slide">
+      <div class="badge crea"><span class="b-dot"></span>Vídeo</div>
+      <div class="slide-kicker">Del cartel al movimiento</div>
+      <h1 class="slide-title">En vídeo conviene pedir menos cosas, pero más claras</h1>
+      <div class="grid g2">
+        <div class="card">
+          <div class="col-title sky">Idea principal</div>
+          <p>La misma estética de la portada puede pasar a un clip o mini videoclip. Si el prompt es demasiado lioso, el resultado suele perder coherencia.</p>
+          <ul class="points" style="margin-top:14px">
+            <li>5 a 10 segundos.</li>
+            <li>Un movimiento principal.</li>
+            <li>Un ambiente reconocible.</li>
+            <li>Una estética que conecte con imagen y canción.</li>
+            <li>Muchas veces es interesante pasarle la primera imagen del vídeo y es capaz de continuarlo.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="col-title violet">Cómo plantearlo en clase</div>
+          <p>Si la herramienta es limitada, el profesor puede hacer la demo y el alumnado centrarse en redactar el prompt, predecir el resultado y analizar qué ha salido bien o mal.</p>
+          <div class="compare-card good" style="margin-top:16px;padding:16px 18px">
+            <span class="tag">Ejemplo</span>
+            <div class="compare-text">Haz un clip vertical de 7 segundos con una cantante adolescente caminando por una ciudad futurista iluminada con neón azul y violeta. La cámara avanza lentamente y el ambiente debe sentirse nocturno y nostálgico.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+     <section class="slide">
+      <div class="badge act"><span class="b-dot"></span>Actividad</div>
+      <div class="slide-kicker">Probando diferentes modelos</div>
+      <h1 class="slide-title">Crear un vídeo de un perro teckel saltando a una piscina de bolas.</h1>
+      <p class="lead">Recuerda: inicio, movimiento, ambiente, estética</p>
+      <div class="grid g5">
+        <div class="card">
+          <div class="col-title lime">Gemini</div>
+           <a class="tool-link" href="https://labs.google/fx/es/tools/flow" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Omni Flash</strong>
+          </a>
+        </div>
+       <div class="card">
+          <div class="col-title lime">Google</div>
+           <a class="tool-link" href="https://aistudio.google.com/prompts/new_video?model=veo-3.1-fast-generate-preview" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Google Veo 3</strong>
+          </a>
+        </div>
+        <div class="card">
+          <div class="col-title lime">Pika Labs</div>
+           <a class="tool-link" href="https://pika.art/pikaffect" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Pika</strong>
+          </a>
+        </div>
+        <div class="card">
+          <div class="col-title lime">Hey Gen</div>
+           <a class="tool-link" href="https://app.heygen.com" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Heygen (para redes sociales)</strong>
+          </a>
+        </div>
+        <div class="card">
+          <div class="col-title lime">Otros modelos de pago</div>
+           <a class="tool-link" href="https://seedance2.ai/es" target="_blank" rel="noopener noreferrer">
+            <span class="tool-kicker">Probar</span>
+            <strong>Seedance</strong>
+          </a>
+        </div>
+      </div>
+      <div class="foot-note">Create a 10-second video of a dachshund walking along a swimming pool diving board, jumping, and landing in a ball pit. Sunny summer vacation vibe with a fun touch.</div>
+    </section>
+
+    <section class="slide">
+      <div class="badge exp"><span class="b-dot"></span>Proyecto</div>
+      <div class="slide-kicker">Una sola identidad creativa</div>
+      <h1 class="slide-title">Portada + canción + videoclip = proyecto multimedia coherente</h1>
+      <div class="flow">
+        <div class="flow-step"><div class="num">1</div><h4>Portada</h4><p>Define la estética general: colores, artista, ambiente, actitud.</p></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="num">2</div><h4>Canción</h4><p>Le da voz al proyecto: ritmo, tema, emoción, estribillo.</p></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="num">3</div><h4>Clip</h4><p>Convierte esa identidad en movimiento: atmósfera, escena y gesto visual.</p></div>
+      </div>
+      <div class="foot-note">No es “hacer cosas sueltas con IA”; es tomar decisiones para que todo parezca parte del mismo universo.</div>
+    </section>
+
+    <section class="slide quote-slide">
+      <div class="quote-box">
+        <h1>Cuanto más impresionante es una herramienta, más importante es usarla con criterio.</h1>
+        <p>A partir de aquí no cambiamos de tema: seguimos hablando de creación. Solo que ahora miramos también lo que puede salir mal, lo que puede hacer daño y lo que conviene cuestionar.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Ética</div>
+      <div class="slide-kicker">Deepfakes y manipulación</div>
+      <h1 class="slide-title">Puede parecer real sin serlo. Y eso cambia mucho las reglas.</h1>
+      <div class="grid g2 ethic-grid">
+        <div class="card">
+          <div class="col-title coral">Lo técnico impresiona</div>
+          <p>Una imagen, una voz o un vídeo generado pueden parecer totalmente creíbles aunque sean inventados o manipulados.</p>
+        </div>
+        <div class="card">
+          <div class="col-title coral">Lo social importa más</div>
+          <p>Compartir montajes de otra persona “por broma” puede humillar, confundir o hacer daño aunque no haya mala intención.</p>
+        </div>
+      </div>
+      <ul class="points">
+        <li>Si tú no querrías que te lo hicieran, no lo uses sobre otros.</li>
+        <li>Una broma privada puede acabar circulando fuera de control.</li>
+        <li>Que algo se pueda hacer no significa que se deba hacer.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Respeto</div>
+      <div class="slide-kicker">Derechos de imagen</div>
+      <h1 class="slide-title">No uses fotos de otras personas sin permiso</h1>
+      <div class="bubble">
+        <p class="lead" style="margin-top:0">Especialmente para bromas, montajes, perfiles falsos o difusión pública. La facilidad de la herramienta no borra el derecho de la otra persona a decidir sobre su imagen.</p>
+        <div class="checklist">
+          <div>Subir fotos personales para probar “qué pasa”.</div>
+          <div>Hacer montajes de compañeros y moverlos por grupos.</div>
+          <div>Usar imágenes ajenas como si no importaran porque “solo era una prueba”.</div>
+          <div>Compartir una creación si no tienes claro de dónde sale o a quién afecta.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Sesgos</div>
+      <div class="slide-kicker">Lo que la IA repite sin pensar</div>
+      <h1 class="slide-title">Pide “un médico” y “una enfermera”… ¿qué imagina el sistema?</h1>
+      <div class="compare-wrap">
+        <div class="compare-card good">
+          <span class="tag">Lo que deberíamos esperar</span>
+          <div class="compare-text">Profesiones variadas, personas distintas, sin asumir género, edad o aspecto por defecto.</div>
+        </div>
+        <div class="compare-mid">vs</div>
+        <div class="compare-card bad">
+          <span class="tag">Lo que a veces repite</span>
+          <div class="compare-text">Estereotipos: médico hombre, enfermera mujer, roles demasiado previsibles, imágenes poco diversas.</div>
+        </div>
+      </div>
+      <p class="lead">La IA aprende de muchísimos ejemplos humanos, así que también puede copiar prejuicios humanos. Por eso conviene mirar el resultado con ojos críticos.</p>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Debate</div>
+      <div class="slide-kicker">Copyright y entrenamiento</div>
+      <h1 class="slide-title">Estos sistemas se entrenan con muchísimo contenido… y eso abre preguntas</h1>
+      <div class="matrix">
+        <div class="box"><h4>Autores</h4><p>Hay artistas, músicos y creadores que sienten que su trabajo ha servido para entrenar sistemas sin un permiso claro.</p></div>
+        <div class="box"><h4>Propiedad</h4><p>No siempre es evidente de quién es “la obra” final ni hasta qué punto es original.</p></div>
+        <div class="box"><h4>Uso responsable</h4><p>Más que entrar en leyes complicadas, lo importante hoy es entender que aquí hay debate real, no una respuesta simple.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Verificar</div>
+      <div class="slide-kicker">Alucinaciones</div>
+      <h1 class="slide-title">La IA puede inventarse cosas con muchísima seguridad</h1>
+      <div class="grid g3">
+        <div class="card"><div class="col-title coral">Suena convincente</div><p>Puede escribir con seguridad total aunque se esté inventando datos, nombres o referencias.</p></div>
+        <div class="card"><div class="col-title coral">A veces te sigue la corriente</div><p>Si insistes mucho, puede intentar agradarte en lugar de corregirte o decir “no lo sé”.</p></div>
+        <div class="card"><div class="col-title lime">Regla útil</div><p>No basta con que suene bien: si importa de verdad, hay que comprobarlo.</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge alert"><span class="b-dot"></span>Privacidad</div>
+      <div class="slide-kicker">Protección de datos</div>
+      <h1 class="slide-title">Un chat gratuito no es lo mismo que una conversación privada</h1>
+      <div class="bubble">
+        <ul class="points" style="margin-top:0">
+          <li>No compartas fotos personales, datos sensibles, documentos ni historias privadas.</li>
+          <li>No subas imágenes de otras personas “solo para probar”.</li>
+          <li>Muchas herramientas tienen un modelo de negocio detrás: gratis no significa íntimo.</li>
+          <li>Si un contenido te daría vergüenza proyectarlo en clase, mejor no subirlo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge crea"><span class="b-dot"></span>IA local</div>
+      <div class="slide-kicker">Otra forma de experimentar</div>
+      <h1 class="slide-title">También se puede probar IA en local, en tu propio ordenador</h1>
+      <div class="grid g2 local-grid">
+        <div class="card">
+          <div class="col-title sky">Qué significa “en local”</div>
+          <p>Que el modelo corre en tu ordenador. Hay más privacidad y menos dependencia de servicios externos.</p>
+        </div>
+        <div class="card">
+          <div class="col-title lime">Qué hace LM Studio</div>
+          <p>Permite descargar, cargar y probar modelos locales; incluso usar algunos de visión o montarlo como servidor local.</p>
+        </div>
+        <div class="card">
+          <div class="col-title coral">Qué no hace tan bien por sí solo</div>
+          <p>No es la típica app de “botón mágico” para imagen. A menudo se combina con ComfyUI, Stable Diffusion WebUI o Draw Things.</p>
+        </div>
+        <div class="card">
+          <div class="col-title violet">La idea importante</div>
+          <p>Puede ser menos cómodo, menos espectacular y más manual, pero ayuda a entender mejor cómo funciona todo y te da más autonomía.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge exp"><span class="b-dot"></span>Proceso</div>
+      <div class="slide-kicker">Iterar también en imagen</div>
+      <h1 class="slide-title">Primer intento, mejora y afinado final</h1>
+      <div class="flow">
+        <div class="flow-step"><div class="num">1</div><h4>Primer intento</h4><p>Pides la idea general para ver si el estilo va por el camino correcto.</p></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="num">2</div><h4>Segunda versión</h4><p>Corriges: más limpio, otros colores, menos elementos, otra emoción, otro encuadre.</p></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="num">3</div><h4>Tercera versión</h4><p>Afinas detalle: tipografía, composición, personaje, fondo, atmósfera exacta.</p></div>
+      </div>
+      <div class="foot-note">Iterar no es “fallar”: es pensar mejor lo que de verdad quieres conseguir.</div>
+    </section>
+
+    <section class="slide">
+      <div class="badge act"><span class="b-dot"></span>Cierre práctico</div>
+      <div class="slide-kicker">Mini presentación final</div>
+      <h1 class="slide-title">Cada pareja presenta su proyecto creativo… y su reflexión ética</h1>
+      <div class="timeline">
+        <div class="row"><div class="when">Paso 1</div><div class="what"><h4>Nombre del artista o proyecto</h4><p>Quiénes son, qué vibe tienen y por qué los habéis inventado así.</p></div></div>
+        <div class="row"><div class="when">Paso 2</div><div class="what"><h4>Portada generada</h4><p>Qué prompt usasteis y qué cambios hicisteis al iterar.</p></div></div>
+        <div class="row"><div class="when">Paso 3</div><div class="what"><h4>Idea de canción y clip</h4><p>Cómo encajan con la misma estética general.</p></div></div>
+        <div class="row"><div class="when">Paso 4</div><div class="what"><h4>Reflexión ética breve</h4><p>Qué límite, riesgo o cuidado os parece más importante después de hoy.</p></div></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="badge act"><span class="b-dot"></span>Preguntas</div>
+      <div class="slide-kicker">Para pensar al salir</div>
+      <h1 class="slide-title">Tres preguntas finales</h1>
+      <div class="grid g3">
+        <div class="card"><div class="col-title sky">1</div><p>¿Qué herramienta os ha parecido más impresionante hoy?</p></div>
+        <div class="card"><div class="col-title coral">2</div><p>¿Qué límite de la IA habéis notado más claro mientras la usabais?</p></div>
+        <div class="card"><div class="col-title lime">3</div><p>¿Qué norma ética o de privacidad os parece más importante?</p></div>
+      </div>
+      <div class="quote-box" style="margin-top:24px;padding:28px 30px">
+        <h1 style="font-size:clamp(28px,4vw,44px);margin-bottom:10px">La IA puede impresionar mucho, pero no piensa por ti.<span class="cursor">&nbsp;</span></h1>
+        <p>Crear también implica decidir con responsabilidad.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="navbar">
+    <div class="dots" id="dots"></div>
+    <div class="navbtns">
+      <button id="prev">anterior</button>
+      <button id="next">siguiente</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dotsWrap = document.getElementById('dots');
+    const curLabel = document.getElementById('cur');
+    let idx = 0;
+
+    slides.forEach((_, i) => {
+      const d = document.createElement('span');
+      d.addEventListener('click', () => go(i));
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function render(){
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+      curLabel.textContent = String(idx + 1).padStart(2, '0');
+      document.getElementById('prev').disabled = idx === 0;
+      document.getElementById('next').disabled = idx === slides.length - 1;
+      slides[idx].scrollTop = 0;
+    }
+
+    function go(i){
+      idx = Math.max(0, Math.min(slides.length - 1, i));
+      render();
+    }
+
+    document.getElementById('prev').addEventListener('click', () => go(idx - 1));
+    document.getElementById('next').addEventListener('click', () => go(idx + 1));
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(idx + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1); }
+    });
+
+    render();
+  </script>
 </body>
 </html>

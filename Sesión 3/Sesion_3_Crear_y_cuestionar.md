@@ -63,7 +63,7 @@ Aprender a generar imágenes con intención estética y con instrucciones cada v
 ### Actividad práctica
 
 - Cada alumno o pareja inventa un grupo o artista ficticio.
-- Deben crear la portada de su primer disco usando ImageFX o una herramienta equivalente.
+- Deben crear la portada de su primer disco usando Gemini (Nano Banana 2) o una herramienta equivalente (ChatGPT).
 - El prompt debe incluir al menos:
   - estilo visual,
   - emociones o atmósfera,
@@ -91,7 +91,7 @@ Explorar cómo la IA puede generar música y letra a partir de una idea.
 
 ### Actividad práctica
 
-- A partir del mismo artista o grupo ficticio, el alumnado genera una canción con MusicFX o herramienta similar.
+- A partir del mismo artista o grupo ficticio, el alumnado genera una canción con Suno o herramienta similar.
 - Pueden decidir:
   - estilo musical,
   - tema de la letra,
@@ -101,9 +101,8 @@ Explorar cómo la IA puede generar música y letra a partir de una idea.
 
 ### Variante divertida
 
-- Canción del verano del instituto.
-- Himno de una clase imposible.
-- Canción épica sobre los exámenes.
+- Canción del verano en Mojácar.
+- Canción épica sobre el final de las vacacoines.
 
 ### Puesta en común
 
@@ -185,7 +184,23 @@ La IA puede inventarse cosas con mucha seguridad, tanto en texto como en explica
 - No confiar solo porque la respuesta parezca segura.
 - No asumir que la IA tiene siempre razón.
 
-## 7. Cierre práctico
+## 7. Introducción a la IA local
+
+- **Qué significa “en local”**: el modelo corre en tu ordenador, con más privacidad y sin depender tanto de servicios externos.
+
+- **Qué hace LM Studio**: descargar, cargar y probar modelos locales; además puede usarse con modelos de visión o como servidor local.
+
+- **Qué no hace por sí solo tan bien**: LM Studio no es, principalmente, una app de imagen tipo “botón mágico”; muchas veces la imagen se genera conectándolo a ***ComfyUI***, Stable Diffusion WebUI o Draw Things (Mac).
+
+- **Modelos pequeños y realistas**: puedes presentarlo como una prueba “menos pro, pero más cercana”, útil para entender cómo funciona un flujo local.
+
+- Crear una imagen con Comfy: iteración también para ir mejorándola.
+  
+  
+
+Podrías prepararme un prompt para pedirle a una IA que me prepare un fichero html a modo de presentación, siguiendo el mismo estilo de la página de la sesión 1 y de la sesión 2, pero ahora para la sesión 3?. Te adjunto la sesión 3
+
+## 8. Cierre práctico
 
 **Duración:** 15 minutos.
 
