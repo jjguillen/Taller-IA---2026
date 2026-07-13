@@ -3,49 +3,438 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión 4 · Proyecto final</title>
+<title>Sesión 4 · Aplicar y presentar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#131029; --panel:#1d1840; --panel-line: rgba(237,234,251,0.10);
-    --lime:#d4ff3d; --coral:#ff6b57; --sky:#59c9f1;
-    --text:#edeaf6; --muted:#a49bc9;
-    --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+    --ink:#131029;
+    --panel:#1d1840;
+    --panel-alt:#241c52;
+    --panel-line: rgba(237,234,251,0.10);
+    --lime:#d4ff3d;
+    --lime-dim: rgba(212,255,61,0.14);
+    --coral:#ff6b57;
+    --coral-dim: rgba(255,107,87,0.14);
+    --sky:#59c9f1;
+    --sky-dim: rgba(89,201,241,0.14);
+    --text:#edeaf6;
+    --muted:#a49bc9;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0; height:100%; background:var(--ink); color:var(--text); font-family:var(--body);}
+  html,body{ margin:0; padding:0; height:100%; background:var(--ink); color:var(--text); font-family:var(--body); overflow:hidden; }
   body{
-    display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
-    padding:8vh 8vw;
     background-image:
       radial-gradient(circle at 8% 12%, rgba(212,255,61,0.06), transparent 40%),
       radial-gradient(circle at 92% 85%, rgba(89,201,241,0.07), transparent 45%);
   }
-  .kicker{font-family:var(--mono); color:var(--sky); font-size:14px; letter-spacing:0.08em; text-transform:uppercase;}
-  h1{font-family:var(--display); font-weight:700; font-size:clamp(34px,6vw,66px); line-height:1.05; margin:14px 0 12px 0;}
-  p{font-size:17px; color:var(--muted); max-width:600px; line-height:1.55;}
-  .badge{
-    display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px;
-    letter-spacing:0.05em; text-transform:uppercase; padding:7px 14px; border-radius:100px;
-    background:rgba(255,107,87,0.14); color:var(--coral); border:1px solid rgba(255,107,87,0.3);
-    margin-top:22px;
+
+  .chatbar{
+    position:fixed; top:0; left:0; right:0; height:56px;
+    display:flex; align-items:center; justify-content:space-between; padding:0 22px;
+    background:rgba(19,16,41,0.85); backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--panel-line); z-index:20;
   }
-  .badge .b-dot{width:6px; height:6px; border-radius:50%; background:currentColor; animation:pulse 2s infinite;}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,107,87,0.5);}70%{box-shadow:0 0 0 8px rgba(255,107,87,0);}100%{box-shadow:0 0 0 0 rgba(255,107,87,0);}}
-  a.back{
-    margin-top:44px; font-family:var(--mono); font-size:13.5px; color:var(--text);
-    text-decoration:none; border:1px solid var(--panel-line); background:var(--panel);
-    padding:10px 18px; border-radius:9px; display:inline-flex; align-items:center; gap:8px;
+  .chatbar-left{display:flex; align-items:center; gap:10px;}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--lime); animation:pulse 2s infinite;}
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(212,255,61,0.55);} 70%{box-shadow:0 0 0 8px rgba(212,255,61,0);} 100%{box-shadow:0 0 0 0 rgba(212,255,61,0);} }
+  .chatbar-title{font-family:var(--display); font-weight:600; font-size:14.5px;}
+  .chatbar-sub{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:8px;}
+  .chatbar-right{font-family:var(--mono); font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:16px;}
+  .chatbar-right b{color:var(--text);}
+  .backlink{
+    font-family:var(--mono); font-size:12.5px; color:var(--muted); text-decoration:none;
+    display:flex; align-items:center; gap:6px; border:1px solid var(--panel-line);
+    background:var(--panel-alt); padding:6px 12px; border-radius:100px; transition:color 0.2s, border-color 0.2s;
   }
-  a.back:hover{border-color:var(--lime); color:var(--lime);}
+  .backlink:hover{ color:var(--lime); border-color:rgba(212,255,61,0.4); }
+
+  .deck{ position:relative; width:100%; height:100%; padding-top:56px; padding-bottom:74px; }
+  .slide{ position:absolute; inset:56px 0 74px 0; display:none; padding:5vh 7vw; overflow-y:auto; }
+  .slide.active{ display:flex; flex-direction:column; justify-content:center; animation: rise 0.5s ease; }
+  @keyframes rise{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  .badge{ display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; padding:5px 12px; border-radius:100px; width:fit-content; margin-bottom:22px; border:1px solid transparent; }
+  .badge.exp{ background:var(--sky-dim); color:var(--sky); border-color:rgba(89,201,241,0.3);}
+  .badge.act{ background:var(--lime-dim); color:var(--lime); border-color:rgba(212,255,61,0.3);}
+  .badge.alert{ background:var(--coral-dim); color:var(--coral); border-color:rgba(255,107,87,0.3);}
+  .badge .b-dot{width:6px; height:6px; border-radius:50%; background:currentColor;}
+
+  .bubble{ position:relative; background:var(--panel); border:1px solid var(--panel-line); border-radius:22px; padding:34px 40px; max-width:920px; }
+  .bubble::before{ content:''; position:absolute; left:34px; bottom:-9px; width:20px; height:20px; background:var(--panel); border-left:1px solid var(--panel-line); border-bottom:1px solid var(--panel-line); clip-path: polygon(0 0, 100% 100%, 0 100%); }
+
+  h1.slide-title{ font-family:var(--display); font-weight:700; font-size:clamp(26px, 3.6vw, 44px); line-height:1.1; margin:0 0 6px 0; max-width:940px; }
+  h1.slide-title .cursor{ display:inline-block; width:0.5ch; background:var(--lime); animation: blink 1s step-end infinite; margin-left:2px; }
+  @keyframes blink{ 50%{opacity:0;} }
+
+  .slide-kicker{ font-family:var(--mono); font-size:12.5px; color:var(--muted); letter-spacing:0.04em; margin-bottom:14px; }
+  p.lead{ font-size:16.5px; line-height:1.55; color:var(--text); max-width:780px; margin:14px 0 0 0;}
+  p.lead b{color:var(--lime);}
+  p.lead b.c{color:var(--coral);}
+  ul.points{ list-style:none; margin:20px 0 0 0; padding:0; max-width:840px;}
+  ul.points li{ position:relative; padding-left:26px; margin-bottom:12px; font-size:15.5px; line-height:1.5; color:var(--text);}
+  ul.points li::before{ content:'▍'; position:absolute; left:0; top:1px; color:var(--lime); font-size:14px;}
+
+  .grid{ display:grid; gap:16px; margin-top:22px; }
+  .grid.g2{ grid-template-columns:1fr 1fr; }
+  .grid.g3{ grid-template-columns:repeat(3, 1fr); }
+  .grid.g4{ grid-template-columns:repeat(4, 1fr); }
+  .card{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:16px; padding:16px 18px; }
+  .card h3{ font-family:var(--display); font-size:15.5px; margin:9px 0 6px 0; }
+  .card p{ font-size:13px; color:var(--muted); line-height:1.45; margin:0;}
+  .icon{ width:26px; height:26px; color:var(--lime); }
+  .icon.sky{ color:var(--sky); }
+  .icon.coral{ color:var(--coral); }
+
+  .col-title{ font-family:var(--display); font-weight:600; font-size:15px; margin-bottom:10px; }
+  .col-title.sky{ color:var(--sky); }
+  .col-title.lime{ color:var(--lime); }
+  .col-title.coral{ color:var(--coral); }
+
+  .foot-note{ margin-top:24px; font-family:var(--mono); font-size:11.5px; color:var(--muted); border-top:1px dashed var(--panel-line); padding-top:12px; max-width:840px; }
+
+  .title-slide{ justify-content:center; align-items:flex-start; }
+  .title-slide .kicker{ font-family:var(--mono); color:var(--sky); font-size:14px; letter-spacing:0.08em; text-transform:uppercase;}
+  .title-slide h1{ font-family:var(--display); font-weight:700; font-size:clamp(34px,6vw,74px); line-height:1.04; margin:14px 0 10px 0; }
+  .title-slide .sub{ font-family:var(--body); font-size:18px; color:var(--muted); max-width:680px; }
+  .title-slide .startline{ margin-top:38px; font-family:var(--mono); font-size:13.5px; color:var(--lime); display:flex; align-items:center; gap:10px; }
+
+  .chip{ font-family:var(--mono); font-size:12px; padding:6px 12px; border-radius:9px; background:var(--panel-alt); border:1px solid var(--panel-line); color:var(--text); }
+  .chip-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+
+  /* comparación chatbot vs agente / modelos ligeros vs potentes */
+  .vs-wrap{ display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin-top:24px; max-width:960px;}
+  .vs-card{ border-radius:16px; padding:20px 22px; border:1px solid var(--panel-line); }
+  .vs-card.a{ background:var(--sky-dim); border-color:rgba(89,201,241,0.3); }
+  .vs-card.b{ background:var(--lime-dim); border-color:rgba(212,255,61,0.3); }
+  .vs-tag{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; display:block; }
+  .vs-card.a .vs-tag{ color:var(--sky); }
+  .vs-card.b .vs-tag{ color:var(--lime); }
+  .vs-text{ font-size:14.5px; line-height:1.5; color:var(--text); }
+  .vs-mid{ display:flex; align-items:center; justify-content:center; font-family:var(--mono); color:var(--muted); font-size:20px; }
+
+  .noshare{ display:grid; grid-template-columns: repeat(2,1fr); gap:12px; margin-top:22px; max-width:840px;}
+  .noshare div{ background:var(--coral-dim); border:1px solid rgba(255,107,87,0.3); border-radius:12px; padding:12px 16px; font-size:14px; color:var(--text); display:flex; align-items:center; gap:10px; }
+  .noshare div::before{ content:'✕'; color:var(--coral); font-weight:700; }
+
+  .goodcheck{ display:grid; grid-template-columns: repeat(2,1fr); gap:12px; margin-top:22px; max-width:840px;}
+  .goodcheck div{ background:var(--lime-dim); border:1px solid rgba(212,255,61,0.3); border-radius:12px; padding:12px 16px; font-size:14px; color:var(--text); display:flex; align-items:center; gap:10px; }
+  .goodcheck div::before{ content:'✓'; color:var(--lime); font-weight:700; }
+
+  .closing-q{ background:var(--panel-alt); border:1px solid var(--panel-line); border-radius:14px; padding:16px 20px; margin-bottom:12px; font-size:15px; }
+  .closing-q b{ color:var(--sky); font-family:var(--mono); font-size:12px; display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em; }
+
+  .navbar{ position:fixed; left:0; right:0; bottom:0; height:74px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; background:rgba(19,16,41,0.85); backdrop-filter:blur(6px); border-top:1px solid var(--panel-line); z-index:20; }
+  .dots{ display:flex; gap:6px; flex-wrap:wrap; max-width:60%; }
+  .dots span{ width:7px; height:7px; border-radius:50%; background:var(--panel-line); cursor:pointer; transition:background 0.2s, transform 0.2s; }
+  .dots span.on{ background:var(--lime); transform:scale(1.25); }
+  .navbtns{ display:flex; gap:10px; }
+  .navbtns button{ font-family:var(--mono); font-size:13px; color:var(--text); background:var(--panel-alt); border:1px solid var(--panel-line); padding:9px 16px; border-radius:9px; cursor:pointer; }
+  .navbtns button:hover{ border-color:var(--lime); color:var(--lime); }
+  .navbtns button:disabled{ opacity:0.3; cursor:default; }
+  .navbtns button:disabled:hover{ border-color:var(--panel-line); color:var(--text); }
+
+  @media (max-width: 900px){
+    .grid.g4{ grid-template-columns:repeat(2,1fr); }
+    .grid.g3{ grid-template-columns:1fr 1fr; }
+    .grid.g2{ grid-template-columns:1fr; }
+    .vs-wrap{ grid-template-columns:1fr; }
+    .vs-mid{ transform:rotate(90deg); }
+    .noshare, .goodcheck{ grid-template-columns:1fr; }
+    .dots{ max-width:40%; }
+  }
 </style>
 </head>
 <body>
-  <div class="kicker">Taller de IA generativa · Sesión 4 de 4</div>
-  <h1>Proyecto final<br>+ IA para estudiar</h1>
-  <p>NotebookLM aplicado al estudio y proyecto final combinando todo lo aprendido en el taller. Esta sesión está en preparación.</p>
-  <div class="badge"><span class="b-dot"></span>En construcción</div>
-  <a class="back" href="../index.html">← volver al taller</a>
+
+<div class="chatbar">
+  <div class="chatbar-left">
+    <div class="dot"></div>
+    <span class="chatbar-title">IA · Sesión 4</span>
+    <span class="chatbar-sub">Aplicar y presentar</span>
+  </div>
+  <div class="chatbar-right">
+    <a class="backlink" href="../index.html">← taller</a>
+    <span><b id="cur">01</b>/18</span>
+  </div>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- 0 Portada -->
+  <section class="slide active title-slide">
+    <div class="kicker">Taller de IA generativa · Sesión 4 de 4</div>
+    <h1>Aplicar y<br>presentar</h1>
+    <p class="sub">NotebookLM aplicado al estudio, una primera idea de los agentes, y un proyecto final que junta todo lo que habéis aprendido este taller.</p>
+    <div class="startline">▍ pulsa → o espacio para empezar</div>
+  </section>
+
+  <!-- 1 Activación inicial -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Activación · 10 min</div>
+    <div class="slide-kicker">Última sesión, hilo conductor</div>
+    <h1 class="slide-title">Descubrir, pedir bien, crear, cuestionar...</h1>
+    <p class="lead">Eso ha sido el taller hasta hoy. Ahora toca la pregunta del millón:</p>
+    <p class="lead"><b>"Si mañana tuvierais un examen, ¿cómo os podría ayudar una IA sin hacer trampas por vosotros?"</b></p>
+    <div class="foot-note">Recoged respuestas rápidas en voz alta o en la pizarra — sin filtrar todavía, solo lanzar ideas.</div>
+  </section>
+
+  <!-- 2 NotebookLM explicación -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación · parte 1 de 2</div>
+    <div class="slide-kicker">Una aplicación real de la IA</div>
+    <h1 class="slide-title">NotebookLM: la IA trabaja sobre tus fuentes</h1>
+    <p class="lead">La diferencia clave frente a un chat normal: aquí la IA <b>no se inventa nada por libre</b>, trabaja sobre los documentos que tú le das.</p>
+    <ul class="points">
+      <li>Resume y organiza ideas de tus propios apuntes.</li>
+      <li>Genera preguntas de repaso a partir de un texto concreto.</li>
+      <li>Puede transformar el mismo contenido en varios formatos: resumen, esquema, audio...</li>
+    </ul>
+  </section>
+
+  <!-- 3 Actividad NotebookLM -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Actividad · 35 min</div>
+    <div class="slide-kicker">Con un texto o apuntes reales</div>
+    <h1 class="slide-title">Estudia un tema con NotebookLM</h1>
+    <p class="lead">Con el material que os da el profe, usad NotebookLM para conseguir estas 4 cosas:</p>
+    <div class="grid g4">
+      <div class="card"><h3>📝 Resumen</h3><p>Las ideas principales, en pocas líneas.</p></div>
+      <div class="card"><h3>❓ Preguntas de repaso</h3><p>Para comprobar si de verdad lo has entendido.</p></div>
+      <div class="card"><h3>💬 Explicación sencilla</h3><p>La versión fácil de lo que cuesta más.</p></div>
+      <div class="card"><h3>🗂️ Esquema o lista</h3><p>La información ordenada visualmente.</p></div>
+    </div>
+    <div class="foot-note">Si la herramienta lo permite ese día, probad también el audio overview: convierte el tema en una especie de podcast.</div>
+  </section>
+
+  <!-- 4 Puesta en común NotebookLM -->
+  <section class="slide">
+    <div class="bubble">
+      <div class="slide-kicker">Puesta en común</div>
+      <h1 class="slide-title">¿Qué formato os ayuda más a aprender?<span class="cursor">&nbsp;</span></h1>
+      <p class="lead">Comparad: resumen, preguntas, esquema o audio — ¿con cuál se os queda mejor la idea?</p>
+      <p class="lead"><b class="c">Importante:</b> una ayuda de estudio no sustituye pensar ni comprobar que de verdad lo entiendes.</p>
+    </div>
+  </section>
+
+  <!-- 5 Moverse entre herramientas: ideas clave -->
+  <section class="slide">
+    <div class="badge alert"><span class="b-dot"></span>Criterio · 25 min</div>
+    <div class="slide-kicker">Sobrevivir en el ecosistema real de la IA</div>
+    <h1 class="slide-title">No todas las herramientas son iguales</h1>
+    <ul class="points">
+      <li>Muchas son de pago o freemium — la capa gratuita suele bastar para probar, aprender y tareas pequeñas.</li>
+      <li>Cada registro nuevo deja huella digital: puede traer spam, seguimiento o riesgo de fraude.</li>
+      <li>Antes de usar una web: ¿quién está detrás? ¿qué permisos pide? ¿qué dice su política de privacidad?</li>
+    </ul>
+  </section>
+
+  <!-- 6 Modelos ligeros vs potentes -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación</div>
+    <div class="slide-kicker">No hace falta la IA más potente para todo</div>
+    <h1 class="slide-title">Elegir la herramienta según la tarea</h1>
+    <div class="vs-wrap">
+      <div class="vs-card a">
+        <span class="vs-tag">Para tareas sencillas</span>
+        <div class="vs-text">Modelos abiertos y ligeros como DeepSeek o GLM: rápidos y de sobra para dudas del día a día.</div>
+      </div>
+      <div class="vs-mid">vs</div>
+      <div class="vs-card b">
+        <span class="vs-tag">Para cosas importantes</span>
+        <div class="vs-text">Modelos más potentes como Claude, ChatGPT o Gemini: presentaciones, documentos serios, razonamiento complejo.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 Actividad guiada análisis de herramientas -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Actividad guiada</div>
+    <div class="slide-kicker">Ojo crítico</div>
+    <h1 class="slide-title">Analizad 2 o 3 herramientas en pantalla</h1>
+    <p class="lead">El profe muestra varias páginas de IA. Por cada una, valorad juntos:</p>
+    <div class="grid g4">
+      <div class="card"><h3>¿Quién está detrás?</h3><p>Empresa conocida, anónima, dudosa...</p></div>
+      <div class="card"><h3>¿Inspira confianza?</h3><p>Diseño, información de contacto, reputación.</p></div>
+      <div class="card"><h3>¿Qué datos pide?</h3><p>Email, teléfono, tarjeta, ubicación...</p></div>
+      <div class="card"><h3>¿Usarías tu correo real?</h3><p>Y si no, ¿por qué no?</p></div>
+    </div>
+  </section>
+
+  <!-- 8 Mensajes prácticos -->
+  <section class="slide">
+    <div class="badge alert"><span class="b-dot"></span>Para llevarte</div>
+    <div class="slide-kicker">Reglas de supervivencia digital</div>
+    <h1 class="slide-title">4 mensajes que no se os deben olvidar</h1>
+    <div class="goodcheck">
+      <div>Probar pocas herramientas, pero bien</div>
+      <div>Leer antes de aceptar</div>
+      <div>No subir archivos personales por impulso</div>
+      <div>Pensar si de verdad merece la pena registrarse</div>
+    </div>
+  </section>
+
+  <!-- 9 Agentes: chatbot vs agente -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación · 25 min</div>
+    <div class="slide-kicker">Hacia dónde va la IA</div>
+    <h1 class="slide-title">De responder preguntas a cumplir misiones</h1>
+    <div class="vs-wrap">
+      <div class="vs-card a">
+        <span class="vs-tag">Un chatbot</span>
+        <div class="vs-text">Responde a lo que le preguntas. Una pregunta, una respuesta.</div>
+      </div>
+      <div class="vs-mid">→</div>
+      <div class="vs-card b">
+        <span class="vs-tag">Un agente</span>
+        <div class="vs-text">Persigue un objetivo: usa herramientas, recuerda pasos y encadena varias acciones sin que se lo pidas una a una.</div>
+      </div>
+    </div>
+    <div class="foot-note">Esto ya se está aplicando a automatización, investigación, creatividad y trabajo en empresas.</div>
+  </section>
+
+  <!-- 10 Ejemplos de agentes -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Ejemplos</div>
+    <div class="slide-kicker">¿Y esto para qué sirve?</div>
+    <h1 class="slide-title">Misiones que ya hacen los agentes</h1>
+    <div class="grid g3">
+      <div class="card"><h3>🔍 Investigar y resumir</h3><p>Buscan información en varias fuentes y preparan un informe.</p></div>
+      <div class="card"><h3>⚙️ Automatizar tareas</h3><p>Organizan tareas repetitivas o flujos de trabajo.</p></div>
+      <div class="card"><h3>🧩 Combinar acciones</h3><p>Mezclan búsqueda, escritura y uso de otras herramientas.</p></div>
+    </div>
+  </section>
+
+  <!-- 11 Demo orientativa -->
+  <section class="slide">
+    <div class="bubble">
+      <div class="slide-kicker">Demo en pantalla</div>
+      <h1 class="slide-title">De "hacer una pregunta" a "encargar una misión"<span class="cursor">&nbsp;</span></h1>
+      <p class="lead">El profe hace una demo breve y guiada con una herramienta de agentes. No importa la instalación ni la parte técnica — importa que veáis la diferencia con un chat normal.</p>
+    </div>
+  </section>
+
+  <!-- 12 Mini actividad: misión para un agente -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Mini actividad · por parejas</div>
+    <div class="slide-kicker">Pensad como si diseñarais uno</div>
+    <h1 class="slide-title">Escribe una "misión" para un agente</h1>
+    <div class="chip-row">
+      <span class="chip">📅 Preparar un plan de estudio</span>
+      <span class="chip">🔎 Investigar un tema y resumirlo</span>
+      <span class="chip">🎨 Proponer ideas para un proyecto creativo</span>
+      <span class="chip">🗂️ Organizar una tarea repetitiva</span>
+    </div>
+    <div class="foot-note">Comentad en grupo: ¿qué necesitaría ese agente para hacerlo bien? Objetivo, herramientas, límites, memoria o fuentes.</div>
+  </section>
+
+  <!-- 13 Proyecto final: propuesta -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Proyecto final · 35 min</div>
+    <div class="slide-kicker">Todo lo del taller, en una sola pieza</div>
+    <h1 class="slide-title">"Así usaría yo la IA para aprender o crear mejor"</h1>
+    <p class="lead">Individual o por parejas: un mini proyecto breve y presentable, no una obra maestra. Mejor algo corto y claro que algo ambicioso e inacabado.</p>
+  </section>
+
+  <!-- 14 Proyecto final: qué incluir -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Requisitos</div>
+    <div class="slide-kicker">El proyecto debe incluir</div>
+    <h1 class="slide-title">4 piezas obligatorias</h1>
+    <div class="grid g4">
+      <div class="card"><h3>Uso práctico</h3><p>Un uso de IA para estudiar o investigar.</p></div>
+      <div class="card"><h3>Prompt currado</h3><p>Un ejemplo de prompt bien trabajado, de la Sesión 2.</p></div>
+      <div class="card"><h3>Elemento creativo</h3><p>Imagen, texto o idea musical generada con IA.</p></div>
+      <div class="card"><h3>Norma ética</h3><p>Una mención a una norma ética o de privacidad importante.</p></div>
+    </div>
+    <div class="chip-row">
+      <span class="chip">🖥️ Mini presentación</span>
+      <span class="chip">📄 Documento breve</span>
+      <span class="chip">🖼️ Póster digital</span>
+      <span class="chip">🗺️ Esquema visual</span>
+    </div>
+  </section>
+
+  <!-- 15 Presentación al grupo -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Presentación · 15 min</div>
+    <div class="slide-kicker">1 o 2 minutos por proyecto</div>
+    <h1 class="slide-title">Enseñad lo que habéis hecho</h1>
+    <p class="lead">Contad qué habéis hecho, qué herramienta habéis usado, y qué aprendizaje o precaución os parece más importante.</p>
+    <div class="chip-row">
+      <span class="chip">Claridad</span>
+      <span class="chip">Creatividad</span>
+      <span class="chip">Uso práctico de la IA</span>
+      <span class="chip">Capacidad crítica</span>
+    </div>
+  </section>
+
+  <!-- 16 Cierre del taller: preguntas -->
+  <section class="slide">
+    <div class="bubble">
+      <div class="slide-kicker">Cierre del taller</div>
+      <h1 class="slide-title">Cuatro preguntas para acabar<span class="cursor">&nbsp;</span></h1>
+      <div class="closing-q"><b>Pregunta 1</b>¿Qué herramienta os ha parecido más útil de todo el taller?</div>
+      <div class="closing-q"><b>Pregunta 2</b>¿Qué os ha parecido más sorprendente?</div>
+      <div class="closing-q"><b>Pregunta 3</b>¿Qué norma de uso responsable recordáis mejor?</div>
+      <div class="closing-q"><b>Pregunta 4</b>¿Qué creéis que cambiará más en los próximos años?</div>
+    </div>
+  </section>
+
+  <!-- 17 Mensaje final -->
+  <section class="slide">
+    <div class="bubble">
+      <div class="slide-kicker">Y con esto, cerramos el taller</div>
+      <h1 class="slide-title">Las decisiones importantes siguen siendo humanas<span class="cursor">&nbsp;</span></h1>
+      <p class="lead">La IA puede ayudar mucho. Pero pensar, comprobar, elegir y responsabilizarse de lo que se hace... eso sigue siendo cosa vuestra.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="navbar">
+  <div class="dots" id="dots"></div>
+  <div class="navbtns">
+    <button id="prev">← anterior</button>
+    <button id="next">siguiente →</button>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsWrap = document.getElementById('dots');
+  const curLabel = document.getElementById('cur');
+  let idx = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function render(){
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+    curLabel.textContent = String(idx + 1).padStart(2, '0');
+    document.getElementById('prev').disabled = idx === 0;
+    document.getElementById('next').disabled = idx === slides.length - 1;
+    slides[idx].scrollTop = 0;
+  }
+  function go(i){ idx = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+
+  document.getElementById('prev').addEventListener('click', () => go(idx - 1));
+  document.getElementById('next').addEventListener('click', () => go(idx + 1));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(idx + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1); }
+  });
+
+  render();
+</script>
+
 </body>
 </html>
