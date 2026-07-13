@@ -262,6 +262,17 @@
   }
   a.back:hover{border-color:var(--lime); color:var(--lime);}
 
+ .vs-wrap{ display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin-top:24px; max-width:960px;}
+  .vs-card{ border-radius:16px; padding:20px 22px; border:1px solid var(--panel-line); }
+  .vs-card.a{ background:var(--sky-dim); border-color:rgba(89,201,241,0.3); }
+  .vs-card.b{ background:var(--lime-dim); border-color:rgba(212,255,61,0.3); }
+  .vs-tag{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; display:block; }
+  .vs-card.a .vs-tag{ color:var(--sky); }
+  .vs-card.b .vs-tag{ color:var(--lime); }
+  .vs-text{ font-size:14.5px; line-height:1.5; color:var(--text); }
+  .vs-mid{ display:flex; align-items:center; justify-content:center; font-family:var(--mono); color:var(--muted); font-size:20px; }
+
+
 </style>
 </head>
 <body>
@@ -272,7 +283,7 @@
     <span class="chatbar-title">IA · Sesión 1</span>
     <span class="chatbar-sub">Descubrir y probar</span>
   </div>
-  <div class="chatbar-right"><b id="cur">01</b>/14</div>
+  <div class="chatbar-right"><b id="cur">01</b>/16</div>
 </div>
 
 <div class="deck" id="deck">
@@ -593,6 +604,39 @@
       </a>
     </div>
     <div class="foot-note">Por eso las respuestas larguísimas cuestan más que las cortas, y por eso las versiones de pago suelen tener límite de tokens al mes en vez de ser infinitas.</div>
+  </section>
+
+  <!-- 10 · Modo razonamieto -->
+  <section class="slide">
+    <div class="badge exp"><span class="b-dot"></span>Explicación</div>
+    <div class="slide-kicker">Pensar hasta dar con la tecla</div>
+    <h1 class="slide-title">Modo razonamiento (thinking)</h1>
+    <p class="lead">El modo razonamiento no “sabe más”: piensa mejor antes de responder.</p>
+    <div class="grid g2">
+      <div class="card">
+        <div class="col-title sky">Respuesta normal</div>
+        <p>El modelo intenta contestar rápido con lo primero que considera más probable o más útil.</p>
+        <ul class="points" style="margin-top:14px">
+          <li>Va más directo.</li>
+          <li>Suele tardar menos.</li>
+          <li>Sirve bien para dudas simples o tareas rápidas.</li>
+          <li>Puede quedarse corta si el problema tiene varios pasos.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="col-title lime">Modo razonamiento</div>
+        <p>El modelo dedica más tiempo a ordenar el problema, separar pasos y comprobar mejor lo que va a decir.</p>
+        <ul class="points" style="margin-top:14px">
+          <li>Analiza antes de responder.</li>
+          <li>Divide la tarea en partes.</li>
+          <li>Comete menos fallos en problemas complejos.</li>
+          <li>Suele tardar más dependiendo de la complejidad.</li>
+          <li>Puede generar varias respuestas, analizarlas y quedarse con la mejor (Aprendizaje por refuerzo).</li>
+          <li>Mayor consumo de tokens</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
   <!-- 10 · Tú eres el producto -->

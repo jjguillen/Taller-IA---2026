@@ -146,6 +146,112 @@
     .noshare, .goodcheck{ grid-template-columns:1fr; }
     .dots{ max-width:40%; }
   }
+
+  .table-wrap{
+  margin-top:24px;
+  background:var(--panel-alt);
+  border:1px solid var(--panel-line);
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 14px 32px rgba(0,0,0,.18);
+}
+
+.ai-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  color:var(--text);
+}
+
+.ai-table thead th{
+  text-align:left;
+  padding:10px 8px;
+  font-family:var(--mono);
+  font-size:11.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:rgba(255,255,255,.03);
+  border-bottom:1px solid var(--panel-line);
+}
+
+.ai-table tbody td{
+  padding:8px;
+  vertical-align:top;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  line-height:1.45;
+}
+
+.ai-table tbody tr:last-child td{
+  border-bottom:none;
+}
+
+.ai-table tbody tr:hover{
+  background:rgba(255,255,255,.025);
+}
+
+.rank-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:28px;
+  height:28px;
+  padding:0 4px;
+  border-radius:999px;
+  font-family:var(--mono);
+  font-size:12px;
+  font-weight:700;
+  color:#0e1016;
+}
+
+.rank-chip.lime{ background:var(--lime); }
+.rank-chip.sky{ background:var(--sky); }
+.rank-chip.violet{ background:var(--violet); color:white; }
+.rank-chip.coral{ background:var(--coral); color:white; }
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-family:var(--mono);
+  letter-spacing:.02em;
+  white-space:nowrap;
+}
+
+.status.ok{
+  background:rgba(212,255,61,.12);
+  color:var(--lime);
+  border:1px solid rgba(212,255,61,.18);
+}
+
+.status.warn{
+  background:rgba(255,138,101,.10);
+  color:var(--coral);
+  border:1px solid rgba(255,138,101,.18);
+}
+
+/* Ajuste responsive */
+@media (max-width: 980px){
+  .table-wrap{
+    overflow:auto;
+  }
+
+  .ai-table{
+    min-width:920px;
+  }
+}
+
+
+ .ampliable {
+    cursor: zoom-in;
+    max-width: 90%;
+    height: auto;
+    margin-top: 3px;
+  }
+
 </style>
 </head>
 <body>
@@ -192,6 +298,7 @@
       <li>Resume y organiza ideas de tus propios apuntes.</li>
       <li>Genera preguntas de repaso a partir de un texto concreto.</li>
       <li>Puede transformar el mismo contenido en varios formatos: resumen, esquema, audio...</li>
+      <li>Puedes preguntarle a un chat sobre toda la información contenida en las fuentes.</li>
     </ul>
   </section>
 
@@ -200,7 +307,7 @@
     <div class="badge act"><span class="b-dot"></span>Actividad · 35 min</div>
     <div class="slide-kicker">Con un texto o apuntes reales</div>
     <h1 class="slide-title">Entiende un tema con NotebookLM</h1>
-    <p class="lead">Buscamos fuentes sobre un tema, y usamos NotebookLM para conseguir estas 4 cosas:</p>
+    <p class="lead">Buscamos fuentes sobre un tema, y usamos NotebookLM para conseguir estas 6 cosas:</p>
     <div class="grid g4">
       <div class="card"><h3>📝 Resumen</h3><p>Las ideas principales, en pocas líneas.</p></div>
       <div class="card"><h3>❓ Cuestionario</h3><p>Para comprobar si de verdad lo has entendido.</p></div>
@@ -208,10 +315,9 @@
       <div class="card"><h3>🗂️ Esquema o lista</h3><p>La información ordenada visualmente.</p></div>
       <div class="card"><h3>🎥 Presentación o vídeo</h3><p>Diapositivas o vídeo.</p></div>
       <div class="card"><h3>👨🏻‍🎓 Tarjetas didácticas</h3><p>Para una fuente en concreto o un subtema.</p></div>
-      
     </div>
     <div class="foot-note"><strong>Posibles temas:</strong> Misiones espaciales actuales, Agujeros negros, Mecánica cuántica, Conducción autónoma, Causas, consecuencias y soluciones tecnológicas para el cambio climático.</div>
-    <div class="foot-note"><strong>Consejo:</strong>Puedes pedir a Gemini o Mistral que te preparen un prompt para buscar fuentes sobre el tema al nivel que tú consideres.</div>
+    <div class="foot-note"><strong>Consejos:</strong> a) puedes pedir a Gemini o Mistral que te preparen un prompt para buscar fuentes sobre el tema al nivel que tú consideres, y b) puedes personalizar el cuaderno con un prompt.</div>
   </section>
 
   <!-- 4 Puesta en común NotebookLM -->
@@ -222,21 +328,86 @@
       <p class="lead">Comparad: resumen, preguntas, esquema o audio — ¿con cuál se os queda mejor la idea?</p>
       <p class="lead"><b class="c">Importante:</b> una ayuda de estudio no sustituye pensar ni comprobar que de verdad lo entiendes.</p>
     </div>
+    <div class="foot-note">NotebookLM va añadiendo nuevas funcionalidades como las infografías muy útiles para presentaciones, o los informes a un nivel ya de investigación o empresarial.</div>
   </section>
 
   <!-- 5 Moverse entre herramientas: ideas clave -->
   <section class="slide">
-    <div class="badge alert"><span class="b-dot"></span>Criterio · 25 min</div>
-    <div class="slide-kicker">Sobrevivir en el ecosistema real de la IA</div>
-    <h1 class="slide-title">No todas las herramientas son iguales</h1>
-    <ul class="points">
-      <li>Muchas son de pago o freemium — la capa gratuita suele bastar para probar, aprender y tareas pequeñas.</li>
-      <li>Cada registro nuevo deja huella digital: puede traer spam, seguimiento o riesgo de fraude.</li>
-      <li>Antes de usar una web: ¿quién está detrás? ¿qué permisos pide? ¿qué dice su política de privacidad?</li>
-    </ul>
-  </section>
+  <div class="badge exp"><span class="b-dot"></span>Estudio</div>
+  <div class="slide-kicker">Herramientas para aprender</div>
+  <h1 class="slide-title">IA para estudiantes: cuáles merecen la pena</h1>
 
-  <!-- 6 Modelos ligeros vs potentes -->
+  <div class="table-wrap">
+    <table class="ai-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Herramienta</th>
+          <th>Para qué sirve mejor</th>
+          <th>Capa gratuita</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rank-chip lime">1</span></td>
+          <td><strong>Khan Academy</strong></td>
+          <td>Aprender contenidos, practicar ejercicios y estudiar.</td>
+          <td><span class="status ok">Sí, gratis</span></td>
+          <td>Gratis para alumnado, familias y docentes.</td>
+        </tr>
+        <tr>
+          <td><span class="rank-chip lime">2</span></td>
+          <td><strong>Canva for Education</strong></td>
+          <td>Presentaciones, carteles y trabajos visuales para clase.</td>
+          <td><span class="status ok">Sí</span></td>
+          <td>Gratis para estudiantes y centros Andalucía.</td>
+        </tr>
+        <tr>
+          <td><span class="rank-chip sky">3</span></td>
+          <td><strong>Quizlet</strong></td>
+          <td>Flashcards, tests, memorización y preparación de exámenes.</td>
+          <td><span class="status ok">Sí, y suscripción</span></td>
+          <td>Versión limitada por 2.99€/mes. Ilimitado por 3.75 $/mes.</td>
+        </tr>
+        <tr>
+          <td><span class="rank-chip coral">4</span></td>
+          <td><strong>Studera.ai</strong></td>
+          <td>Crear quizzes, flashcards, podcasts y materiales de estudio.</td>
+          <td><span class="status warn">Sí, muy limitada</span></td>
+          <td>Premium 9€/mes · Pro 19€/mes.</td>
+        </tr>
+        <tr>
+          <td><span class="rank-chip coral">5</span></td>
+          <td><strong>Astra AI</strong></td>
+          <td>Tutor IA para estudiar y preparar exámenes paso a paso.</td>
+          <td><span class="status warn">No clara</span></td>
+          <td>Plus 24€/mes, Sigma 80€/mes</td>
+        </tr>
+        <tr>
+          <td><span class="rank-chip coral">6</span></td>
+          <td><strong>StudyFi</strong></td>
+          <td>Convertir apuntes, resúmenes, quizzes y flashcards.</td>
+          <td><span class="status warn">Sí, prueba / limitada</span></td>
+          <td>Suscripción de 12.99€/mes.</td>
+        </tr>
+        <tr>
+          <td><span class="rank-chip coral">7</span></td>
+          <td><strong>Typed AI</strong></td>
+          <td>Generar tests, tarjetas y apoyo para estudiar temarios.</td>
+          <td><span class="status warn">No clara</span></td>
+          <td>Básico 8.99€/mes, Premium 11.99€/mes.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot-note">
+    Si una herramienta no deja claro su precio o sus límites, mejor probar con cautela antes de registrarse. Analizad si os inspiran confianza y qué datos os piden. 
+  </div>
+</section>
+
+  <!-- 7 Modelos ligeros vs potentes -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Explicación</div>
     <div class="slide-kicker">No hace falta la IA más potente para todo</div>
@@ -244,27 +415,13 @@
     <div class="vs-wrap">
       <div class="vs-card a">
         <span class="vs-tag">Para tareas sencillas</span>
-        <div class="vs-text">Modelos abiertos y ligeros como DeepSeek o GLM: rápidos y de sobra para dudas del día a día.</div>
+        <div class="vs-text">Modelos abiertos y ligeros como Mistral, DeepSeek o GLM: rápidos y de sobra para dudas del día a día.</div>
       </div>
       <div class="vs-mid">vs</div>
       <div class="vs-card b">
         <span class="vs-tag">Para cosas importantes</span>
-        <div class="vs-text">Modelos más potentes como Claude, ChatGPT o Gemini: presentaciones, documentos serios, razonamiento complejo.</div>
+        <div class="vs-text">Modelos más potentes como Gemini con NotebookLM o ya otros modelos como Claude o ChatGPT: presentaciones, documentos serios, razonamiento complejo.</div>
       </div>
-    </div>
-  </section>
-
-  <!-- 7 Actividad guiada análisis de herramientas -->
-  <section class="slide">
-    <div class="badge act"><span class="b-dot"></span>Actividad guiada</div>
-    <div class="slide-kicker">Ojo crítico</div>
-    <h1 class="slide-title">Analizad 2 o 3 herramientas en pantalla</h1>
-    <p class="lead">El profe muestra varias páginas de IA. Por cada una, valorad juntos:</p>
-    <div class="grid g4">
-      <div class="card"><h3>¿Quién está detrás?</h3><p>Empresa conocida, anónima, dudosa...</p></div>
-      <div class="card"><h3>¿Inspira confianza?</h3><p>Diseño, información de contacto, reputación.</p></div>
-      <div class="card"><h3>¿Qué datos pide?</h3><p>Email, teléfono, tarjeta, ubicación...</p></div>
-      <div class="card"><h3>¿Usarías tu correo real?</h3><p>Y si no, ¿por qué no?</p></div>
     </div>
   </section>
 
@@ -295,6 +452,13 @@
       <div class="vs-card b">
         <span class="vs-tag">Un agente</span>
         <div class="vs-text">Persigue un objetivo: usa herramientas, recuerda pasos y encadena varias acciones sin que se lo pidas una a una.</div>
+      </div>
+    </div>
+    <div class="" style="margin: 20px;">
+      <div style="max-width: 300px;">
+        <a href="./img/chatbot_vs_agente.png" target="_blank" rel="noopener noreferrer">
+          <img src="./img/chatbot_vs_agente.png" alt="Foto ampliable" class="ampliable">
+        </a>
       </div>
     </div>
     <div class="foot-note">Esto ya se está aplicando a automatización, investigación, creatividad y trabajo en empresas.</div>
