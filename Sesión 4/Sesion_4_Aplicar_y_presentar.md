@@ -45,7 +45,7 @@ Cerrar el hilo del taller y situar la última sesión en la vida real.
 ### Actividad
 
 - Recordatorio muy breve de lo aprendido: descubrir, pedir bien, crear y cuestionar.
-- Pregunta al grupo: “Si mañana tuvierais examen, ¿cómo os podría ayudar una IA sin hacer trampas por vosotros?”.
+- Pregunta al grupo: “Si tuvierais que prepararos para un examen, ¿cómo os podría ayudar una IA sin hacer trampas por vosotros?”.
 - Recoger respuestas rápidas en pizarra o en voz alta.
 
 ## 2. NotebookLM para estudiar
