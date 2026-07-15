@@ -103,6 +103,8 @@
   .title-slide h1{ font-family:var(--display); font-weight:700; font-size:clamp(34px,6vw,74px); line-height:1.04; margin:14px 0 10px 0; }
   .title-slide .sub{ font-family:var(--body); font-size:18px; color:var(--muted); max-width:680px; }
   .title-slide .startline{ margin-top:38px; font-family:var(--mono); font-size:13.5px; color:var(--lime); display:flex; align-items:center; gap:10px; }
+  .back{margin-top:44px;font-family:var(--mono);font-size:13.5px;color:var(--text);text-decoration:none;border:1px solid var(--panel-line);background:var(--panel);padding:10px 18px;border-radius:9px;display:inline-flex;align-items:center;gap:8px}
+  .back:hover{border-color:var(--lime);color:var(--lime)}
 
   .chip{ font-family:var(--mono); font-size:12px; padding:6px 12px; border-radius:9px; background:var(--panel-alt); border:1px solid var(--panel-line); color:var(--text); }
   .chip-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
@@ -278,6 +280,7 @@
     <h1>Aplicar y<br>presentar</h1>
     <p class="sub">NotebookLM aplicado al estudio, una primera idea de los agentes, y un proyecto final que junta todo lo que habéis aprendido este taller.</p>
     <div class="startline">▍ pulsa → o espacio para empezar</div>
+    <a class="back" href="../index.html">← volver al taller</a>
   </section>
 
   <!-- 1 Activación inicial -->
@@ -536,7 +539,7 @@
         un fichero excel con las siguientes columnas: cliente, código, importe total sin iva, importe total con iva, y al final una fila con
         la suma de todos los importes.”</p>
     </div>
-    <div class="bubble" style="max-width: 500px; margin-top:20px;">
+    <div class="bubble" style="max-width: 400px; margin-top:20px;">
         <a href="./img/hermes.png" target="_blank" rel="noopener noreferrer">
           <img src="./img/hermes.png" alt="Foto ampliable" class="ampliable">
         </a>
