@@ -16,6 +16,7 @@
     --lime-dim: rgba(212,255,61,0.14);
     --coral:#ff6b57;
     --coral-dim: rgba(255,107,87,0.14);
+    --violet:#b78cff;
     --sky:#59c9f1;
     --sky-dim: rgba(89,201,241,0.14);
     --text:#edeaf6;
@@ -93,7 +94,8 @@
   .col-title.sky{ color:var(--sky); }
   .col-title.lime{ color:var(--lime); }
   .col-title.coral{ color:var(--coral); }
-
+  .col-title.violet{ color:var(--violet); }
+  
   .foot-note{ margin-top:24px; font-family:var(--mono); font-size:11.5px; color:var(--muted); border-top:1px dashed var(--panel-line); padding-top:12px; max-width:840px; }
 
   .title-slide{ justify-content:center; align-items:flex-start; }
@@ -442,7 +444,7 @@
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Explicación · 25 min</div>
     <div class="slide-kicker">Hacia dónde va la IA</div>
-    <h1 class="slide-title">De responder preguntas a cumplir misiones</h1>
+    <h1 class="slide-title">Agentes de IA: de responder preguntas a cumplir misiones</h1>
     <div class="vs-wrap">
       <div class="vs-card a">
         <span class="vs-tag">Un chatbot</span>
@@ -464,12 +466,12 @@
     <div class="foot-note">Esto ya se está aplicando a automatización, investigación, creatividad y trabajo en empresas.</div>
   </section>
 
-  <!-- 10 Ejemplos de agentes -->
+  <!-- 10 Qué son los agentes -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Ejemplos</div>
     <div class="slide-kicker">¿Y esto para qué sirve?</div>
-    <h1 class="slide-title">Misiones que ya hacen los agentes</h1>
-    <div class="bubble">
+    <h1 class="slide-title">Misiones que ya hacen los agentes de IA</h1>
+    <div class="bubble" style="max-width: 750px;">
       <div>
         <a href="./img/agentes.png" target="_blank" rel="noopener noreferrer">
           <img src="./img/agentes.png" alt="Foto ampliable" class="ampliable">
@@ -478,12 +480,68 @@
     </div>
   </section>
 
+  <!-- 11 Ejemplos de agentes de IA -->
+<section class="slide">
+  <div class="badge crea"><span class="b-dot"></span>Agentes</div>
+  <div class="slide-kicker">Más allá del chatbot</div>
+  <h1 class="slide-title">Agentes de IA que ejecutan trabajo real</h1>
+
+  <div class="bubble">
+    <p class="lead" style="margin-top:0">
+      Un agente de IA puede recordar contexto, usar herramientas, seguir varios pasos, hacer tareas en paralelo y completar tareas más largas. Dos ejemplos muy comentados ahora mismo son <b>Hermes</b> y <b>OpenClaw</b>.
+    </p>
+  </div>
+
+  <div class="grid g3" style="margin-top:22px;">
+    <div class="card">
+      <div class="col-title sky">Hermes</div>
+      <p>Un agente orientado a hacer tareas de forma continua, con memoria y herramientas conectadas. Que no solo responda, sino que pueda ayudarte a avanzar en trabajos más largos.</p>
+    </div>
+
+    <div class="card">
+      <div class="col-title lime">OpenClaw</div>
+      <p>Asistente personal de código abierto que puede actuar sobre herramientas y servicios reales. Puede tomar el control de tu PC y hacer cosas por ti.</p>
+    </div>
+
+    <div class="card">
+      <div class="col-title violet">Cowork (Antrophic)</div>
+      <p>IA más parecida a un compañero de trabajo: conversa contigo, te ayuda a pensar, redactar, ordenar ideas y avanzar paso a paso en una tarea.</p>
+    </div>
+
+    <div class="card">
+      <div class="col-title sky">Comet (Perplexity)</div>
+      <p>Asistente para buscar, navegar, investigar y trabajar con información. ES más a una herramienta que te acompaña mientras exploras contenidos.</p>
+    </div>
+
+    <div class="card">
+      <div class="col-title lime">Codex (OpenAI)</div>
+      <p>Suele asociarse a tareas de programación: entender código, proponer funciones, corregir errores o ayudar a construir proyectos.</p>
+    </div>
+
+    <div class="card">
+    <div class="col-title violet">Cursor</div>
+    <p>IA agéntica para programar: puede entender un proyecto, proponer un plan, tocar varios archivos y ejecutar tareas para avanzar contigo, no solo chatear.</p>
+  </div>
+  </div>
+
+</section>
+
   <!-- 11 Demo orientativa -->
   <section class="slide">
     <div class="bubble">
       <div class="slide-kicker">Demo en pantalla</div>
       <h1 class="slide-title">De "hacer una pregunta" a "encargar una misión"<span class="cursor">&nbsp;</span></h1>
-      <p class="lead">El profe hace una demo breve y guiada con una herramienta de agentes. No importa la instalación ni la parte técnica — importa que veáis la diferencia con un chat normal.</p>
+
+      <p class="lead">“Abre una carpeta en mi escritorio que tiene una serie de facturas, extrae los datos de clientes y los importes y genera
+        un fichero excel con las siguientes columnas: cliente, código, importe total sin iva, importe total con iva, y al final una fila con
+        la suma de todos los importes.”</p>
+    </div>
+    <div class="bubble" style="max-width: 500px; margin-top:20px;">
+      <div>
+        <a href="./img/hermes.png" target="_blank" rel="noopener noreferrer">
+          <img src="./img/hermes.png" alt="Foto ampliable" class="ampliable">
+        </a>
+      </div>
     </div>
   </section>
 
@@ -515,7 +573,7 @@
     <div class="slide-kicker">El proyecto debe incluir</div>
     <h1 class="slide-title">4 piezas obligatorias</h1>
     <div class="grid g4">
-      <div class="card"><h3>Uso práctico</h3><p>Un uso de IA para estudiar o investigar.</p></div>
+      <div class="card"><h3>Uso práctico</h3><p>Un uso de IA para investigar o aprender sobre algún tema.</p></div>
       <div class="card"><h3>Prompt currado</h3><p>Un ejemplo de prompt bien trabajado, de la Sesión 2.</p></div>
       <div class="card"><h3>Elemento creativo</h3><p>Imagen, texto o idea musical generada con IA.</p></div>
       <div class="card"><h3>Norma ética</h3><p>Una mención a una norma ética o de privacidad importante.</p></div>
