@@ -27,7 +27,7 @@
   }
   *{box-sizing:border-box; scrollbar-width:none;}
   *::-webkit-scrollbar{display:none;}
-  html,body{ margin:0; padding:0; height:100%; background:var(--ink); color:var(--text); font-family:var(--body); overflow:hidden; }
+  html,body{ margin:0; padding:0; height:100%; height:100dvh; background:var(--ink); color:var(--text); font-family:var(--body); overflow:hidden; }
   body{
     background-image:
       radial-gradient(circle at 8% 12%, rgba(212,255,61,0.06), transparent 40%),
@@ -152,6 +152,49 @@
     .dots{ max-width:40%; }
   }
 
+  @media (max-width: 640px){
+    .slide{ padding:2.5vh 4vw; }
+    .slide.active{ justify-content:flex-start; }
+    .title-slide{ justify-content:flex-start; padding-top:4vh; }
+    .bubble{ padding:20px 18px; border-radius:16px; }
+    .bubble::before{ left:24px; }
+    h1.slide-title{ font-size:clamp(20px, 5vw, 30px); }
+    .title-slide h1{ font-size:clamp(24px, 7vw, 48px); }
+    p.lead{ font-size:14.5px; }
+    ul.points li{ font-size:14px; }
+    .grid.g4, .grid.g3{ grid-template-columns:1fr; }
+    .chip-row{ flex-direction:column; align-items:flex-start; }
+    .navbar{ padding:0 12px; height:64px; }
+    .navbtns button{ padding:7px 12px; font-size:12px; }
+    .chatbar{ padding:0 12px; }
+    .chatbar-sub{ display:none; }
+    .deck{ padding-bottom:64px; }
+    .slide{ inset:56px 0 64px 0; }
+    .dots{ gap:5px; max-width:45%; }
+    .dots span{ width:7px; height:7px; }
+    .back{ margin-top:22px; font-size:12px; padding:8px 14px; }
+    .foot-note{ font-size:11px; }
+    .title-slide .sub{ font-size:15px; }
+    .table-wrap{ overflow:auto; }
+    .ai-table{ min-width:700px; }
+  }
+
+  @media (max-width: 420px){
+    .chatbar-title{ font-size:12.5px; }
+    .chatbar-right{ font-size:11px; gap:8px; }
+    .backlink{ font-size:11px; padding:4px 8px; }
+    .badge{ font-size:10px; padding:4px 10px; }
+    .noshare div, .goodcheck div{ font-size:13px; padding:10px 12px; }
+    .vs-text{ font-size:13px; }
+    .card{ padding:14px 16px; }
+    .card h3{ font-size:14px; }
+    .card p{ font-size:12.5px; }
+    .slide-kicker{ font-size:11px; }
+    img.ampliable{ max-width:100%; }
+    .closing-q{ font-size:13.5px; padding:12px 16px; }
+    .ai-table{ font-size:12px; min-width:600px; }
+  }
+
   .table-wrap{
   margin-top:24px;
   background:var(--panel-alt);
@@ -250,6 +293,7 @@
 }
 
 
+ img{max-width:100%;height:auto;}
  .ampliable {
     cursor: zoom-in;
     max-width: 90%;
@@ -279,7 +323,7 @@
   <section class="slide active title-slide">
     <div class="kicker">Taller de IA generativa · Sesión 4 de 4</div>
     <h1>Aplicar y<br>presentar</h1>
-    <p class="sub">NotebookLM aplicado al estudio, una primera idea de los agentes, y un proyecto final que junta todo lo que habéis aprendido este taller.</p>
+    <p class="sub">Gemini Notebook aplicado al estudio, una primera idea de los agentes, y un proyecto final que junta todo lo que habéis aprendido este taller.</p>
     <div class="startline">▍ pulsa → o espacio para empezar</div>
     <a class="back" href="../index.html">← volver al taller</a>
   </section>
@@ -294,11 +338,11 @@
     <div class="foot-note">Recoged respuestas rápidas en voz alta o en la pizarra — sin filtrar todavía, solo lanzar ideas.</div>
   </section>
 
-  <!-- 2 NotebookLM explicación -->
+  <!-- 2 Gemini Notebook explicación -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Explicación · parte 1 de 2</div>
     <div class="slide-kicker">Una aplicación real de la IA</div>
-    <h1 class="slide-title">NotebookLM: la IA trabaja sobre tus fuentes</h1>
+    <h1 class="slide-title">Gemini Notebook: la IA trabaja sobre tus fuentes</h1>
     <p class="lead">La diferencia clave frente a un chat normal: aquí la IA <b>no se inventa nada por libre</b>, trabaja sobre los documentos que tú le das.</p>
     <ul class="points">
       <li>Resume y organiza ideas de tus propios apuntes.</li>
@@ -308,12 +352,12 @@
     </ul>
   </section>
 
-  <!-- 3 Actividad NotebookLM -->
+  <!-- 3 Actividad Gemini Notebook -->
   <section class="slide">
     <div class="badge act"><span class="b-dot"></span>Actividad · 35 min</div>
     <div class="slide-kicker">Con un texto o apuntes reales</div>
-    <h1 class="slide-title">Entiende un tema con NotebookLM</h1>
-    <p class="lead">Buscamos fuentes sobre un tema, y usamos NotebookLM para conseguir estas 6 cosas:</p>
+    <h1 class="slide-title">Entiende un tema con Gemini Notebook</h1>
+    <p class="lead">Buscamos fuentes sobre un tema, y usamos Gemini Notebook para conseguir estas 6 cosas:</p>
     <div class="grid g4">
       <div class="card"><h3>📝 Resumen</h3><p>Las ideas principales, en pocas líneas.</p></div>
       <div class="card"><h3>❓ Cuestionario</h3><p>Para comprobar si de verdad lo has entendido.</p></div>
@@ -326,7 +370,7 @@
     <div class="foot-note"><strong>Consejos:</strong> a) puedes pedir a Gemini o Mistral que te preparen un prompt para buscar fuentes sobre el tema al nivel que tú consideres, y b) puedes personalizar el cuaderno con un prompt.</div>
   </section>
 
-  <!-- 4 Puesta en común NotebookLM -->
+  <!-- 4 Puesta en común Gemini Notebook -->
   <section class="slide">
     <div class="bubble">
       <div class="slide-kicker">Puesta en común</div>
@@ -334,7 +378,7 @@
       <p class="lead">Comparad: resumen, preguntas, esquema o audio — ¿con cuál se os queda mejor la idea?</p>
       <p class="lead"><b class="c">Importante:</b> una ayuda de estudio no sustituye pensar ni comprobar que de verdad lo entiendes.</p>
     </div>
-    <div class="foot-note">NotebookLM va añadiendo nuevas funcionalidades como las infografías muy útiles para presentaciones, o los informes a un nivel ya de investigación o empresarial.</div>
+    <div class="foot-note">Gemini Notebook va añadiendo nuevas funcionalidades como las infografías muy útiles para presentaciones, o los informes a un nivel ya de investigación o empresarial.</div>
   </section>
 
   <!-- 5 Moverse entre herramientas: ideas clave -->
@@ -426,7 +470,7 @@
       <div class="vs-mid">vs</div>
       <div class="vs-card b">
         <span class="vs-tag">Para cosas importantes</span>
-        <div class="vs-text">Modelos más potentes como Gemini con NotebookLM o ya otros modelos como Claude o ChatGPT: presentaciones, documentos serios, razonamiento complejo.</div>
+        <div class="vs-text">Modelos más potentes como Gemini con Gemini Notebook o ya otros modelos como Claude o ChatGPT: presentaciones, documentos serios, razonamiento complejo.</div>
       </div>
     </div>
   </section>
