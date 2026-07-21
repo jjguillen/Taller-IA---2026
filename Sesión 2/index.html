@@ -51,6 +51,10 @@
   h1.slide-title .cursor{ display:inline-block; width:0.5ch; background:var(--lime); animation: blink 1s step-end infinite; margin-left:2px; }
   @keyframes blink{ 50%{opacity:0;} }
 
+  a{ color:var(--sky); text-decoration:none; }
+  a:visited{ color:var(--sky); }
+  a:hover, a:focus-visible{ color:var(--lime); text-decoration:underline; }
+
   .slide-kicker{ font-family:var(--mono); font-size:12.5px; color:var(--muted); letter-spacing:0.04em; margin-bottom:14px; }
   p.lead{ font-size:16.5px; line-height:1.55; color:var(--text); max-width:780px; margin:14px 0 0 0;}
   p.lead b{color:var(--lime);}
@@ -210,7 +214,7 @@
     margin-top: 3px;
   }
 
-   a.back{
+  a.back{
     margin-top:44px; font-family:var(--mono); font-size:13.5px; color:var(--text);
     text-decoration:none; border:1px solid var(--panel-line); background:var(--panel);
     padding:10px 18px; border-radius:9px; display:inline-flex; align-items:center; gap:8px;
@@ -231,12 +235,28 @@
   .chatbar-right{font-family:var(--mono); font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:16px;}
   .chatbar-right b{color:var(--text);}
 
-  .backlink{
-    font-family:var(--mono); font-size:12.5px; color:var(--muted); text-decoration:none;
-    display:flex; align-items:center; gap:6px; border:1px solid var(--panel-line);
-    background:var(--panel-alt); padding:6px 12px; border-radius:100px; transition:color 0.2s, border-color 0.2s;
-  }
-  .backlink:hover{ color:var(--lime); border-color:rgba(212,255,61,0.4); }
+.backlink,
+.backlink:visited{
+  font-family:var(--mono);
+  font-size:12.5px;
+  color:var(--muted);
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid var(--panel-line);
+  background:var(--panel-alt);
+  padding:6px 12px;
+  border-radius:100px;
+  transition:color 0.2s, border-color 0.2s;
+}
+
+.backlink:hover,
+.backlink:focus-visible{
+  color:var(--lime);
+  border-color:rgba(212,255,61,0.4);
+  text-decoration:none;
+}
 
 </style>
 </head>
@@ -250,7 +270,7 @@
   </div>
   <div class="chatbar-right">
     <a class="backlink" href="../index.html">← taller</a>
-    <span><b id="cur">01</b>/18</span>
+    <span><b id="cur">01</b>/19</span>
   </div>
 </div>
 
@@ -375,7 +395,27 @@
     <div class="foot-note">Usa los 5 elementos de un buen prompt</div>
   </section>
 
-  <!-- 7 Iterar también es pensar -->
+    <!-- 7 Juegos -->
+  <section class="slide">
+    <div class="badge act"><span class="b-dot"></span>Juegos</div>
+    <div class="slide-kicker">Hora de divertirse</div>
+    <h1 class="slide-title">Solo ganarás con buenos prompts</h1>
+    <div class="grid g3">
+      <div class="card"><h3>&#127918; Comprueba tus prompts</h3><p>Escribe prompts detallados y consigue los 100 puntos - 
+        <a href="./game/prompt-quest.html" target="_blank" rel="noopener noreferrer">link</a>
+      </p></div>
+      <div class="card"><h3>&#128168; Say what you see</h3><p>Tienes que describir lo que ves en una imagen de la mejor manera para replicarlo (usa el traductor si lo necesitas)  - 
+        <a href="https://www.youtube.com/watch?v=0g1j3k8r5xM" target="_blank" rel="noopener noreferrer">link</a>
+      </p></div>
+      <div class="card"><h3>&#129497; Gandalf AI</h3><p>Convence a una IA para que te revele una contraseña - 
+        <a href="https://gandalf.lakera.ai/baseline" target="_blank" rel="noopener noreferrer">link</a>
+      </p></div>
+      
+    </div>
+    <div class="foot-note">Usa los 5 elementos de un buen prompt y ganarás</div>
+  </section>
+
+  <!-- 8 Iterar también es pensar -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Explicación</div>
     <div class="slide-kicker">No se acierta a la primera, y no pasa nada</div>
@@ -402,7 +442,7 @@
     </div>
   </section>
 
-  <!-- 8 Roles y contexto -->
+  <!-- 9 Roles y contexto -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Explicación</div>
     <div class="slide-kicker">Mismo tema, distinto "quién lo cuenta"</div>
@@ -426,7 +466,7 @@
     </div>
   </section>
 
-  <!-- 9 Prompt battles -->
+  <!-- 10 Prompt battles -->
   <section class="slide">
     <div class="badge act"><span class="b-dot"></span>Actividad · Prompt battle</div>
     <div class="slide-kicker">Por parejas o equipos</div>
@@ -442,7 +482,7 @@
        "inventar el mejor anuncio para vender algo absurdo, como un vender paraguas en el desierto o unas chanclas con WiFi", " pedir una historia corta que parezca normal y acabe con un giro inesperado").</div>
   </section>
 
-  <!-- 10 Aplicación divertida -->
+  <!-- 11 Aplicación divertida -->
   <section class="slide">
     <div class="badge act"><span class="b-dot"></span>Para jugar</div>
     <div class="slide-kicker">Prompts para pasarlo bien</div>
@@ -455,7 +495,7 @@
     </div>
   </section>
 
-  <!-- 11 Errores típicos -->
+  <!-- 12 Errores típicos -->
   <section class="slide">
     <div class="badge alert"><span class="b-dot"></span>Aviso</div>
     <div class="slide-kicker">Lo que hace que un prompt falle</div>
@@ -468,7 +508,7 @@
     </div>
   </section>
 
-  <!-- 12 Prompts útiles día a día 1 -->
+  <!-- 13 Prompts útiles día a día 1 -->
   <section class="slide">
     <div class="badge act"><span class="b-dot"></span>Para llevarte</div>
     <div class="slide-kicker">Prompts que puedes usar hoy mismo · parte 1</div>
@@ -488,7 +528,7 @@
     </p></div>
   </section>
 
-  <!-- 13 Prompts útiles día a día 2 -->
+  <!-- 14 Prompts útiles día a día 2 -->
   <section class="slide">
     <div class="badge act"><span class="b-dot"></span>Para llevarte</div>
     <div class="slide-kicker">Prompts que puedes usar hoy mismo · parte 2</div>
@@ -505,7 +545,7 @@
     </div>
   </section>
 
-  <!-- 14 Plantilla -->
+  <!-- 15 Plantilla -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Herramienta de apoyo</div>
     <div class="slide-kicker">Para cuando te bloquees</div>
@@ -520,7 +560,7 @@
     <div class="foot-note">No hace falta rellenar las 5 líneas siempre. Úsala como chuleta cuando no sepas por dónde empezar.</div>
   </section>
 
-  <!-- 15 Cierre -->
+  <!-- 16 Cierre -->
   <section class="slide">
     <div class="bubble">
       <div class="slide-kicker">Para acabar</div>
@@ -530,7 +570,7 @@
     </div>
   </section>
 
-  <!-- 16 Gemini en la práctica -->
+  <!-- 17 Gemini en la práctica -->
   <section class="slide">
     <div class="badge exp"><span class="b-dot"></span>Herramienta</div>
     <div class="slide-kicker">Cosas que quizá no conocías de Gemini</div>
@@ -592,7 +632,7 @@
     <div class="foot-note">Actividades: crear un gem (resumenes), conectar aplicaciones de Google Workspace</div>
   </section>
 
-    <!-- 16 ChatGPT en la práctica -->
+<!-- 18 ChatGPT en la práctica -->
 <section class="slide">
   <div class="badge exp"><span class="b-dot"></span>Herramienta</div>
   <div class="slide-kicker">Cosas que quizá no conocías de ChatGPT</div>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROMPT QUEST — Entrena tu IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10122a;
+    --bg-grid: #171a3a;
+    --panel: #1b1e42;
+    --panel-2: #232759;
+    --line: #33397a;
+    --text: #eef0ff;
+    --text-dim: #a9adde;
+    --mint: #6ffbc0;
+    --mint-dim: #1f4a3d;
+    --coral: #ff6b7a;
+    --coral-dim: #4a1f27;
+    --amber: #ffd166;
+    --amber-dim: #4a3a1a;
+    --violet: #b48cff;
+    --radius: 14px;
+    --font-display: 'Chakra Petch', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(180,140,255,0.12), transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(111,251,192,0.10), transparent 40%),
+      repeating-linear-gradient(0deg, var(--bg-grid) 0 1px, transparent 1px 40px),
+      repeating-linear-gradient(90deg, var(--bg-grid) 0 1px, transparent 1px 40px),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height:100vh;
+    padding: 20px 14px 60px;
+  }
+  .wrap{ max-width: 880px; margin: 0 auto; }
+
+  /* HEADER */
+  header{ margin-bottom: 22px; }
+  .brand{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .brand h1{
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 40px);
+    letter-spacing: 1px;
+    margin: 0;
+    color: var(--text);
+    text-shadow: 0 0 18px rgba(111,251,192,0.35);
+  }
+  .brand h1 span{ color: var(--mint); }
+  .brand p{ margin: 2px 0 0; color: var(--text-dim); font-size: 14px; }
+  .xp-badge{
+    font-family: var(--font-mono);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    white-space:nowrap;
+  }
+  .xp-badge b{ color: var(--amber); }
+
+  .dots{ display:flex; gap: 8px; margin-top: 16px; }
+  .dot{
+    flex:1; height: 8px; border-radius: 999px; background: var(--panel-2);
+    border: 1px solid var(--line); overflow:hidden; position:relative;
+  }
+  .dot.done{ background: var(--mint); border-color: var(--mint); }
+  .dot.current{ background: linear-gradient(90deg, var(--violet), var(--mint)); border-color: var(--mint); }
+
+  /* CARDS */
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .mission-tag{
+    font-family: var(--font-mono);
+    color: var(--mint);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .scenario{
+    display:flex; gap: 12px; align-items:flex-start;
+  }
+  .avatar{
+    flex: none;
+    width: 42px; height: 42px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--violet), var(--mint));
+    display:flex; align-items:center; justify-content:center;
+    font-size: 20px;
+  }
+  .bubble{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    border-top-left-radius: 2px;
+    padding: 12px 14px;
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .bad-toggle{
+    margin-top: 10px; font-size: 13px; color: var(--text-dim);
+    background: none; border: none; text-decoration: underline dotted;
+    cursor: pointer; padding: 0; font-family: var(--font-body);
+  }
+  .bad-example{
+    display:none; margin-top: 10px; padding: 10px 12px; border-radius: 10px;
+    background: var(--coral-dim); border: 1px dashed var(--coral); font-size: 14px;
+    font-family: var(--font-mono);
+  }
+  .bad-example.show{ display:block; }
+
+  /* PROMPT EDITOR */
+  label.field-label{
+    display:block; font-size: 13px; color: var(--text-dim); margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-mono);
+  }
+  textarea{
+    width: 100%; min-height: 110px; resize: vertical;
+    background: #0d0f24; color: var(--text); border: 1.5px solid var(--line);
+    border-radius: 10px; padding: 14px; font-size: 15.5px; font-family: var(--font-body);
+    line-height: 1.5; outline: none; transition: border-color .15s ease;
+  }
+  textarea:focus{ border-color: var(--mint); }
+  textarea::placeholder{ color: #5c6099; }
+
+  /* METER */
+  .meter{
+    display:flex; flex-wrap:wrap; gap: 8px; margin: 14px 0;
+  }
+  .chip{
+    font-size: 12.5px; padding: 7px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--text-dim);
+    display:flex; align-items:center; gap: 6px; transition: all .2s ease;
+    font-family: var(--font-mono);
+  }
+  .chip .mark{ font-size: 13px; }
+  .chip.on{ background: var(--mint-dim); border-color: var(--mint); color: var(--mint); }
+
+  .btn-row{ display:flex; gap: 10px; flex-wrap:wrap; align-items:center; margin-top: 6px;}
+  button.primary{
+    background: var(--mint); color: #06231a; border: none; font-weight: 700;
+    font-family: var(--font-display); letter-spacing: 0.5px; font-size: 15px;
+    padding: 13px 26px; border-radius: 10px; cursor: pointer; transition: transform .1s ease;
+  }
+  button.primary:hover{ transform: translateY(-1px); }
+  button.primary:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+  button.ghost{
+    background: transparent; color: var(--text-dim); border: 1px solid var(--line);
+    font-family: var(--font-body); font-size: 14px; padding: 12px 18px; border-radius: 10px; cursor: pointer;
+  }
+  button.ghost:hover{ color: var(--text); border-color: var(--mint); }
+
+  /* FEEDBACK */
+  #feedback{ display:none; }
+  #feedback.show{ display:block; }
+  .score-line{
+    display:flex; align-items:center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .score-pill{
+    font-family: var(--font-display); font-size: 15px; font-weight: 700;
+    padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line);
+  }
+  .tier-mal{ background: var(--coral-dim); color: var(--coral); border-color: var(--coral); }
+  .tier-medio{ background: var(--amber-dim); color: var(--amber); border-color: var(--amber); }
+  .tier-bien{ background: var(--mint-dim); color: var(--mint); border-color: var(--mint); }
+  .tier-genial{ background: linear-gradient(90deg, var(--mint-dim), rgba(180,140,255,.25)); color: var(--mint); border-color: var(--mint); }
+
+  .ai-response{
+    background: #0d0f24; border: 1px solid var(--line); border-left: 3px solid var(--mint);
+    border-radius: 10px; padding: 14px 16px; font-size: 15px; line-height: 1.55; margin-bottom: 14px;
+  }
+  .checklist{ display:flex; flex-direction:column; gap: 7px; margin-bottom: 14px; }
+  .check-item{ font-size: 14px; display:flex; gap: 8px; align-items:flex-start; color: var(--text-dim); }
+  .check-item.ok{ color: var(--text); }
+  .check-item .icon{ flex:none; }
+
+  footer{ text-align:center; color: var(--text-dim); font-size: 13px; margin-top: 30px; }
+
+  /* FINAL SCREEN */
+  #final{ display:none; text-align:center; }
+  #final.show{ display:block; }
+  #final .rank{
+    font-family: var(--font-display); font-size: clamp(26px,6vw,38px);
+    margin: 6px 0 4px; color: var(--amber); text-shadow: 0 0 20px rgba(255,209,102,.4);
+  }
+  #final .emoji{ font-size: 54px; }
+
+  @media (max-width: 560px){
+    .brand{ flex-direction: column; align-items:flex-start; }
+    .card{ padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div>
+        <h1>PROMPT <span>QUEST</span></h1>
+        <p>Entrena tu IA como un/a auténtico/a ingeniero/a de prompts</p>
+      </div>
+      <div class="xp-badge">XP: <b id="xpCount">0</b> / 100</div>
+    </div>
+    <div class="dots" id="dots"></div>
+  </header>
+
+  <div id="game">
+    <div class="card">
+      <p class="mission-tag" id="missionTag">Misión 1 / 5</p>
+      <div class="scenario">
+        <div class="avatar">🤖</div>
+        <div class="bubble" id="scenarioText"></div>
+      </div>
+      <button class="bad-toggle" id="badToggleBtn">👀 Ver un prompt flojo para esta misión</button>
+      <div class="bad-example" id="badExample"></div>
+    </div>
+
+    <div class="card">
+      <label class="field-label" for="promptInput">Escribe tu prompt aquí</label>
+      <textarea id="promptInput" placeholder="Escribe la instrucción que le darías a la IA..."></textarea>
+
+      <div class="meter" id="meter"></div>
+
+      <div class="btn-row">
+        <button class="primary" id="sendBtn">Enviar a la IA 🚀</button>
+        <button class="ghost" id="hintBtn">💡 Pista</button>
+      </div>
+    </div>
+
+    <div class="card" id="feedback">
+      <div class="score-line">
+        <span class="score-pill" id="tierPill"></span>
+        <span id="xpGained" style="font-family:var(--font-mono); color:var(--text-dim); font-size:14px;"></span>
+      </div>
+      <div class="ai-response" id="aiResponse"></div>
+      <div class="checklist" id="checklist"></div>
+      <div class="btn-row">
+        <button class="primary" id="nextBtn">Siguiente misión →</button>
+        <button class="ghost" id="retryBtn">Reintentar esta misión</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="final">
+    <div class="emoji">🏆</div>
+    <p style="color:var(--text-dim); font-family:var(--font-mono); letter-spacing:2px; text-transform:uppercase; font-size:13px; margin-top:10px;">Misión completada</p>
+    <div class="rank" id="finalRank"></div>
+    <p id="finalScore" style="color:var(--text-dim); font-size:15px;"></p>
+    <p style="max-width:520px;margin:14px auto 20px;color:var(--text);font-size:15px;line-height:1.6;">
+      Un buen prompt casi siempre tiene estas 5 cosas: <b>contexto</b> (quién eres o para quién es), una <b>tarea concreta</b>, el <b>formato</b> que quieres, <b>detalles o restricciones</b> claras y el <b>tono</b> adecuado. Cuantas más incluyas, mejor te entiende la IA.
+    </p>
+    <button class="primary" id="restartBtn">Volver a jugar 🔁</button>
+  </div>
+
+  <footer>Prompt Quest · Taller de IA</footer>
+</div>
+
+<script>
+/* ---------- CRITERIA DEFINITIONS (shared shape across levels) ---------- */
+function kw(text, list){
+  const t = text.toLowerCase();
+  return list.some(k => t.includes(k));
+}
+function wordCount(text){
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+const CRIT_LABELS = {
+  contexto: "Contexto / rol — ¿quién eres o para quién es esto?",
+  tarea: "Tarea concreta — ¿qué le pides exactamente?",
+  formato: "Formato — ¿cómo quieres el resultado?",
+  detalles: "Detalles y restricciones — ¿algún dato o límite concreto?",
+  tono: "Tono / público — ¿qué estilo debe usar?"
+};
+
+/* ---------- LEVELS ---------- */
+const LEVELS = [
+  {
+    tag: "Misión 1 / 5 · Memes de clase",
+    scenario: "Quieres pedirle a la IA una idea de <b>meme gracioso sobre los exámenes finales</b> para compartir en el grupo de WhatsApp de la clase.",
+    badExample: "hazme un meme",
+    idealHint: "Ej: 'Actúa como un compañero de clase gracioso. Dame 2 ideas de meme sobre los exámenes finales, en formato corto (una frase o formato Drake), para publicar en el grupo de WhatsApp de mi clase. Que sea divertido pero sin ofender a nadie.'",
+    criteria: {
+      contexto: ["whatsapp","grupo","clase","amigos","instituto","compañeros"],
+      tarea: ["meme","idea","graciosa","broma","chiste"],
+      formato: ["frase","texto corto","una línea","viñeta","pie de foto","corta","formato drake","drake"],
+      detalles: ["examen","estudiar","profe","nota","final","sin ofender","apropiado"],
+      tono: ["gracioso","divertido","humor","adolescente","jóvenes","ingenioso"]
+    },
+    responses: {
+      mal: "🤖 Aquí tienes un meme: <i>«Cuando ves el examen y era la semana pasada»</i>. (Genérico, seguro que ya lo has visto mil veces — le has dado muy poco a la IA para trabajar).",
+      medio: "🤖 Vale, aquí va una idea: una foto de alguien sudando con el texto <i>«Yo mirando el temario 5 minutos antes del examen final»</i>. (Mejor, pero sigue siendo bastante genérico).",
+      bien: "🤖 Idea de meme: formato «Drake rechazando/aceptando» — arriba: <i>«Estudiar con dos semanas de antelación»</i>, abajo: <i>«Abrir el libro a las 23:58 la noche antes»</i>. Corto, perfecto para WhatsApp y sin ofender a nadie.",
+      genial: "🤖 3 ideas para tu grupo: 1) Formato Drake: 'plan de estudio' vs 'ver un vídeo más'. 2) Gato dormido con el texto: <i>«Mi cerebro durante el examen final»</i>. 3) Expectativa vs realidad: repasar todo el temario vs repasar solo el índice. Las tres son cortas, sin ofender a nadie y pensadas para un grupo de clase."
+    }
+  },
+  {
+    tag: "Misión 2 / 5 · Repaso exprés",
+    scenario: "Mañana tienes examen de <b>Lengua</b> y necesitas que la IA te resuma un libro de lectura obligatoria para repasar esta noche.",
+    badExample: "resume el libro",
+    idealHint: "Ej: 'Soy estudiante de 3º de ESO y mañana tengo examen de Lengua. Resume el argumento del libro en 5 puntos clave, sin spoilers del final, mencionando los personajes principales. Que sea sencillo y fácil de memorizar.'",
+    criteria: {
+      contexto: ["lengua","examen mañana","clase de","instituto","estudiante","asignatura","eso"],
+      tarea: ["resumen","resume","libro","capítulo","argumento","trama"],
+      formato: ["puntos","esquema","tabla","palabras","partes","lista"],
+      detalles: ["sin spoilers","personajes principales","protagonista","sin destripar","sin contar el final"],
+      tono: ["sencillo","fácil de entender","para estudiar","claro","resumido","memorizar"]
+    },
+    responses: {
+      mal: "🤖 El libro trata sobre unos personajes que viven cosas y al final pasa algo importante. (No sabe de qué libro hablas, ni qué necesitas, así que inventa algo genérico e inútil).",
+      medio: "🤖 Aquí tienes un resumen general del libro con la trama principal y los personajes más importantes. (Sirve, pero es largo y no está pensado para repasar rápido antes de un examen).",
+      bien: "🤖 Resumen en 5 puntos clave: 1) Presentación de los personajes principales, 2) el conflicto que lo pone todo en marcha, 3) los momentos clave del desarrollo, 4) el punto de giro, 5) el desenlace (sin destriparte el final del todo). Ideal para repasar rápido.",
+      genial: "🤖 Aquí tienes tu esquema de repaso en 5 puntos: personajes principales, conflicto inicial, desarrollo, punto de giro y tema central del libro — todo en frases cortas y sin spoilers del final, para que puedas memorizarlo en 10 minutos antes del examen."
+    }
+  },
+  {
+    tag: "Misión 3 / 5 · Entrenador IA",
+    scenario: "La semana que viene tenéis <b>pruebas físicas en Educación Física</b> y quieres que la IA te prepare una rutina para entrenar en casa.",
+    badExample: "dame una rutina de ejercicio",
+    idealHint: "Ej: 'Tengo 14 años, soy principiante y no tengo material en casa. Dame una rutina de entrenamiento de 20 minutos, 3 días a la semana, en formato de lista con ejercicios y repeticiones, para prepararme para las pruebas físicas de clase. Que sea motivadora y fácil de seguir.'",
+    criteria: {
+      contexto: ["tengo 14","tengo 13","tengo 15","principiante","en casa","sin material","sin pesas"],
+      tarea: ["rutina","ejercicios","entrenamiento","prueba física","plan de entrenamiento"],
+      formato: ["días","minutos","lista","tabla","semana","por día"],
+      detalles: ["sin material","sin pesas","20 minutos","30 minutos","3 veces","tres veces","flexiones","abdominales","carrera"],
+      tono: ["motivador","fácil de seguir","para principiantes","sin lesionarme","divertido"]
+    },
+    responses: {
+      mal: "🤖 Haz ejercicio todos los días y come sano. (Un consejo tan genérico que no te sirve para entrenar nada en concreto).",
+      medio: "🤖 Puedes hacer flexiones, abdominales y correr un poco cada día para mejorar tu forma física. (Algo más útil, pero sin estructura ni cantidades concretas).",
+      bien: "🤖 Rutina de 20 minutos, 3 días a la semana: Día 1 — 3x10 flexiones, 3x15 abdominales, 10 min de carrera suave. Día 2 — sentadillas, plancha, saltos. Día 3 — combinación de los dos días. Sin material, apta para principiantes.",
+      genial: "🤖 Plan de 3 días · 20 min/día, sin material: Lunes (fuerza tren superior: flexiones, plancha), Miércoles (piernas: sentadillas, zancadas, saltos), Viernes (cardio: carrera suave + burpees). Cada semana sube 2 repeticiones. Empieza con calentamiento de 3 min y termina con estiramientos. ¡Vas a notar la mejora en las pruebas!"
+    }
+  },
+  {
+    tag: "Misión 4 / 5 · Redes del club",
+    scenario: "Eres el/la encargado/a de <b>redes sociales del club de baloncesto</b> de tu instituto y hay que anunciar el próximo partido en Instagram.",
+    badExample: "escribe algo para instagram sobre el partido",
+    idealHint: "Ej: 'Actúa como community manager del club de baloncesto de mi instituto. Escribe un caption para Instagram anunciando el partido del sábado a las 10:00 en el pabellón contra el instituto rival. Incluye 3 hashtags y algún emoji. Tono entusiasta y cercano a los seguidores jóvenes, máximo 40 palabras.'",
+    criteria: {
+      contexto: ["actúa como","eres","community manager","club de baloncesto","instituto","redes sociales"],
+      tarea: ["publicación","post","anuncio","anunciar","partido","instagram"],
+      formato: ["caption","hashtags","emoji","pie de foto","máximo","caracteres","palabras"],
+      detalles: ["sábado","hora","pabellón","rival","equipo","fecha","10:00"],
+      tono: ["entusiasta","cercano","emocionante","para jóvenes","enérgico"]
+    },
+    responses: {
+      mal: "🤖 ¡Hay un partido! Vengan todos. (Sin fecha, sin hora, sin hashtags, sin gracia — nadie hace caso a este post).",
+      medio: "🤖 Este sábado tenemos partido de baloncesto, ¡os esperamos a todos para animar al equipo! (Correcto pero plano, sin hashtags ni datos concretos del partido).",
+      bien: "🤖 🏀 ¡SÁBADO DE BALONCESTO! A las 10:00 en el pabellón nos jugamos mucho contra nuestro gran rival. ¡Ven a animar al equipo! #ClubBaloncesto #VamosEquipo #SábadoDeBalonCesto",
+      genial: "🤖 🏀🔥 Este SÁBADO a las 10:00 en el pabellón, ¡nos vemos las caras con el rival de siempre! Trae tu mejor grito de animación, que este partido promete. ¿Nos vemos en las gradas? #ClubBaloncesto #VamosEquipo #SábadoDeGrada"
+    }
+  },
+  {
+    tag: "Misión 5 / 5 · El jefe final",
+    scenario: "Tienes que preparar una <b>presentación oral de 5 minutos sobre inteligencia artificial</b> para compañeros que no saben nada del tema. ¡Junta TODO lo que has aprendido en un solo prompt!",
+    badExample: "explícame la inteligencia artificial",
+    idealHint: "Ej: 'Soy estudiante de 4º de ESO y tengo que dar una presentación oral de 5 minutos sobre inteligencia artificial a compañeros que no saben nada del tema. Explícamelo en un guion con 4 puntos clave, usando ejemplos cotidianos y sin tecnicismos. Que sea ameno y fácil de contar en clase.'",
+    criteria: {
+      contexto: ["actúa como","soy un estudiante","tengo 14","tengo 15","instituto","compañeros de clase","no saben nada","eso"],
+      tarea: ["presentación","explica","inteligencia artificial"," ia ","guion","oral"],
+      formato: ["5 minutos","minutos","puntos","guion","esquema","diapositivas","partes"],
+      detalles: ["ejemplos","sin tecnicismos","fácil de entender","datos curiosos","sin jerga","cotidianos"],
+      tono: ["sencillo","ameno","claro","para principiantes","divertido"]
+    },
+    responses: {
+      mal: "🤖 La inteligencia artificial es una tecnología que usan los ordenadores para hacer cosas parecidas a pensar. (Correcto pero tan genérico que no te sirve ni para 30 segundos de charla, y menos para 5 minutos).",
+      medio: "🤖 La IA son programas que aprenden de datos para hacer tareas como reconocer imágenes o hablar contigo. Te doy algunas ideas para explicarlo en clase. (Útil, pero sin estructura clara para una presentación).",
+      bien: "🤖 Guion en 4 puntos para tus 5 minutos: 1) Qué es la IA (con el ejemplo de Netflix recomendándote series), 2) cómo 'aprende' (con muchos ejemplos, como reconocer fotos de gatos), 3) dónde la usamos cada día (móvil, buscadores), 4) un límite importante (a veces se equivoca o tiene sesgos). Sin tecnicismos.",
+      genial: "🤖 Guion de 5 minutos, sin tecnicismos: 1) Gancho inicial — pregunta '¿quién ha hablado hoy con una IA sin darse cuenta?' (autocorrector, Spotify...). 2) Qué es y cómo aprende, con el ejemplo de enseñar a reconocer fotos de perros. 3) Dónde la usamos en el día a día. 4) Un límite real (se puede equivocar, hay que revisar lo que dice). Cierre con una pregunta para el público. ¡Con esto tienes tus 5 minutos cubiertos y ameno de principio a fin!"
+    }
+  }
+];
+
+/* ---------- STATE ---------- */
+let current = 0;
+let totalXP = 0;
+let lastScore = {};
+
+/* ---------- DOM ---------- */
+const dotsEl = document.getElementById('dots');
+const missionTag = document.getElementById('missionTag');
+const scenarioText = document.getElementById('scenarioText');
+const badToggleBtn = document.getElementById('badToggleBtn');
+const badExample = document.getElementById('badExample');
+const promptInput = document.getElementById('promptInput');
+const meterEl = document.getElementById('meter');
+const sendBtn = document.getElementById('sendBtn');
+const hintBtn = document.getElementById('hintBtn');
+const feedback = document.getElementById('feedback');
+const tierPill = document.getElementById('tierPill');
+const xpGained = document.getElementById('xpGained');
+const aiResponse = document.getElementById('aiResponse');
+const checklist = document.getElementById('checklist');
+const nextBtn = document.getElementById('nextBtn');
+const retryBtn = document.getElementById('retryBtn');
+const xpCount = document.getElementById('xpCount');
+const gameEl = document.getElementById('game');
+const finalEl = document.getElementById('final');
+
+function buildDots(){
+  dotsEl.innerHTML = '';
+  LEVELS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < current ? ' done' : i === current ? ' current' : '');
+    dotsEl.appendChild(d);
+  });
+}
+
+function buildMeter(){
+  meterEl.innerHTML = '';
+  Object.keys(CRIT_LABELS).forEach(id => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.id = 'chip-' + id;
+    chip.innerHTML = '<span class="mark">○</span><span>' + CRIT_LABELS[id].split(' — ')[0] + '</span>';
+    meterEl.appendChild(chip);
+  });
+}
+
+function analyze(text, level){
+  const results = {};
+  const words = wordCount(text);
+  Object.keys(level.criteria).forEach(id => {
+    let passed = kw(text, level.criteria[id]);
+    if (id === 'tarea' && words < 6) passed = false;
+    results[id] = passed;
+  });
+  return results;
+}
+
+function updateMeterLive(){
+  const level = LEVELS[current];
+  const results = analyze(promptInput.value, level);
+  Object.keys(results).forEach(id => {
+    const chip = document.getElementById('chip-' + id);
+    if (results[id]){
+      chip.classList.add('on');
+      chip.querySelector('.mark').textContent = '●';
+    } else {
+      chip.classList.remove('on');
+      chip.querySelector('.mark').textContent = '○';
+    }
+  });
+}
+
+function loadLevel(){
+  const level = LEVELS[current];
+  missionTag.textContent = level.tag;
+  scenarioText.innerHTML = level.scenario;
+  badExample.textContent = '"' + level.badExample + '"';
+  badExample.classList.remove('show');
+  badToggleBtn.textContent = '👀 Ver un prompt flojo para esta misión';
+  promptInput.value = '';
+  feedback.classList.remove('show');
+  buildMeter();
+  buildDots();
+  updateMeterLive();
+  promptInput.focus();
+}
+
+badToggleBtn.addEventListener('click', () => {
+  badExample.classList.toggle('show');
+  badToggleBtn.textContent = badExample.classList.contains('show')
+    ? '🙈 Ocultar el prompt flojo'
+    : '👀 Ver un prompt flojo para esta misión';
+});
+
+hintBtn.addEventListener('click', () => {
+  alert('💡 Pista:\n\n' + LEVELS[current].idealHint);
+});
+
+promptInput.addEventListener('input', updateMeterLive);
+
+function tierFromScore(score){
+  if (score <= 1) return 'mal';
+  if (score <= 2) return 'medio';
+  if (score <= 3) return 'medio';
+  if (score === 4) return 'bien';
+  return 'genial';
+}
+const TIER_META = {
+  mal:   { label: '🔴 Prompt flojo',    cls: 'tier-mal',    xp: 5  },
+  medio: { label: '🟡 Prompt mejorable', cls: 'tier-medio',  xp: 10 },
+  bien:  { label: '🟢 Buen prompt',      cls: 'tier-bien',   xp: 15 },
+  genial:{ label: '🏆 Prompt genial',    cls: 'tier-genial', xp: 20 }
+};
+
+sendBtn.addEventListener('click', () => {
+  const text = promptInput.value.trim();
+  if (!text){
+    promptInput.focus();
+    return;
+  }
+  const level = LEVELS[current];
+  const results = analyze(text, level);
+  const score = Object.values(results).filter(Boolean).length;
+  const tier = tierFromScore(score);
+  const meta = TIER_META[tier];
+
+  lastScore[current] = { score, tier, gained: meta.xp };
+
+  tierPill.textContent = meta.label + ' (' + score + '/5)';
+  tierPill.className = 'score-pill ' + meta.cls;
+  xpGained.textContent = '+' + meta.xp + ' XP';
+  aiResponse.innerHTML = level.responses[tier];
+
+  checklist.innerHTML = '';
+  Object.keys(CRIT_LABELS).forEach(id => {
+    const ok = results[id];
+    const row = document.createElement('div');
+    row.className = 'check-item' + (ok ? ' ok' : '');
+    row.innerHTML = '<span class="icon">' + (ok ? '✅' : '⬜') + '</span><span>' + CRIT_LABELS[id] + '</span>';
+    checklist.appendChild(row);
+  });
+
+  feedback.classList.add('show');
+  feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+retryBtn.addEventListener('click', () => {
+  feedback.classList.remove('show');
+  promptInput.focus();
+});
+
+nextBtn.addEventListener('click', () => {
+  totalXP += (lastScore[current] ? lastScore[current].gained : 0);
+  xpCount.textContent = totalXP;
+  current++;
+  if (current >= LEVELS.length){
+    showFinal();
+  } else {
+    loadLevel();
+  }
+});
+
+function showFinal(){
+  gameEl.style.display = 'none';
+  buildDots();
+  finalEl.classList.add('show');
+  let rank, msg;
+  if (totalXP <= 40){ rank = '🌱 Aprendiz de Prompts'; }
+  else if (totalXP <= 70){ rank = '⚙️ Ingeniero/a de Prompts Junior'; }
+  else if (totalXP <= 90){ rank = '🚀 Ingeniero/a de Prompts Senior'; }
+  else { rank = '🏆 Maestro/a del Prompt'; }
+  document.getElementById('finalRank').textContent = rank;
+  document.getElementById('finalScore').textContent = 'Puntuación final: ' + totalXP + ' / 100 XP';
+}
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+  current = 0;
+  totalXP = 0;
+  lastScore = {};
+  xpCount.textContent = 0;
+  finalEl.classList.remove('show');
+  gameEl.style.display = '';
+  loadLevel();
+});
+
+/* ---------- INIT ---------- */
+loadLevel();
+</script>
+</body>
+</html>
